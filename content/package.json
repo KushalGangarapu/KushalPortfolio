@@ -1,0 +1,39 @@
+{
+  "name": "kushal",
+  "version": "2027.0-beta",
+  "description": "A person, distributed as a package. Side effects include shipping to 1,500 users.",
+  "main": "README.md",
+  "type": "human",
+  "license": "MIT",
+  "author": "Kushal Gangarapu <smileykushal@gmail.com>",
+  "bugs": "contact.env — the issue tracker is email",
+  "engines": {
+    "node": ">=18",
+    "sleep": "deprecated"
+  },
+  "scripts": {
+    "dev": "wake_up && school && code && council_meeting",
+    "build": "kushal build --production",
+    "test": "vitest run tests/",
+    "grind": "while(alive){ learn(); ship(); lead(); }",
+    "sleep": "echo 'command deprecated since student government'"
+  },
+  "dependencies": {
+    "coffee": "^4.2.0",
+    "curiosity": "*",
+    "react": "^19",
+    "postgres": "load-bearing"
+  },
+  "devDependencies": {
+    "imposter-syndrome": "^0.0.0",
+    "deadlines": "workspace:*",
+    "school": "class-of-2027"
+  },
+  "peerDependencies": {
+    "you": "any",
+    "your-recruiting-pipeline": "optional-but-encouraged"
+  },
+  "repository": "github.com/KushalGangarapu",
+  "keywords": ["hireable", "ships-to-production", "student-government"],
+  "funding": "internships accepted"
+}

@@ -1,0 +1,225 @@
+{
+  "$schema": "./resume.schema.json",
+  "person": {
+    "name": "Kushal Gangarapu",
+    "handle": "KushalGangarapu",
+    "class": "FullStackBuilder",
+    "hireable": true,
+    "extends": ["Student", "StudentBodyCoPM", "CoffeeConsumer"],
+    "version": "2027.0-beta",
+    "lts": false
+  },
+  "education": [
+    {
+      "institution": "Burnaby Central Secondary School",
+      "degree": "Secondary school diploma — CS + math focus",
+      "period": "2022 → 2027 (expected)"
+    }
+  ],
+  "experience": [
+    {
+      "role": "Co-Prime Minister — Student Government",
+      "org": "Burnaby Central Secondary School",
+      "period": "may 2026 → present",
+      "highlights": [
+        "advocate for 1,500+ students; direct line to admin, faculty, and district leadership",
+        "run a 60+ member team — exec committees, delegation, accountability, the works",
+        "own end-to-end strategy, budget, and execution for school-wide events and spirit weeks",
+        "previously: minister of technology (2025→26), grade rep in each of grades 8, 9, and 10 (2022→25) — four years, three titles"
+      ],
+      "stack": ["60-person team", "budgets", "spreadsheet diplomacy"]
+    },
+    {
+      "role": "General Executive — BCYDC",
+      "org": "BC Youth Developer Collective",
+      "period": "apr 2025 → present",
+      "highlights": [
+        "organized Daydream Vancouver — largest Daydream hackathon in north america, largest youth hackathon in western canada",
+        "secured $5,200+ in funding and in-kind resources — made a 130+ participant event completely free",
+        "managed 130+ hackers across a 12-hour game jam; coordinated godot/unity/art/sound workshops; 50+ games shipped to itch.io"
+      ],
+      "stack": ["sponsorship emails", "event ops", "godot", "unity"]
+    },
+    {
+      "role": "Student Monitor — Summer School",
+      "org": "Burnaby School District (SD41)",
+      "period": "jul 2026",
+      "highlights": [
+        "kept summer school running — building navigation, classroom access, supply requests",
+        "built the centralized excel system for registrations, withdrawals, and transfers; admin reporting ran on it"
+      ],
+      "stack": ["excel", "operations", "keys to the building (literally)"]
+    },
+    {
+      "role": "Co-Leader — The Good Guys",
+      "org": "Burnaby Central Secondary School",
+      "period": "jun 2026 → present",
+      "highlights": [
+        "direct strategy for kindness/outreach/civic-engagement initiatives across the student body",
+        "build teams and local partnerships to expand the chapter; previously presidential advisor — ran fundraisers that cleared $1,000"
+      ],
+      "stack": ["community outreach", "partnerships"]
+    },
+    {
+      "role": "Co-Leader — Chess Club",
+      "org": "Burnaby Central Secondary School",
+      "period": "jun 2026 → present",
+      "highlights": [
+        "lead the after-school chess teaching program at local elementary schools",
+        "drive recruitment — making chess something kids actually show up for"
+      ],
+      "stack": ["teaching", "recruitment", "en passant, explained patiently"]
+    },
+    {
+      "role": "President — Debate Club",
+      "org": "Burnaby Central Secondary School",
+      "period": "nov 2025 → present",
+      "highlights": [
+        "run weekly sessions for 15+ members — formal argumentation, critical analysis, public speaking",
+        "formerly marketing manager (2024→25); member improvement is measurable and measured"
+      ],
+      "stack": ["public speaking", "coaching", "rebuttals"]
+    },
+    {
+      "role": "Event Coordinator — Bright Minds",
+      "org": "Burnaby Central Secondary School",
+      "period": "oct 2025 → present",
+      "highlights": [
+        "spearhead mental-health awareness events (the Cozy Room) — volunteers organized, teachers partnered"
+      ],
+      "stack": ["event logistics", "volunteer coordination"]
+    },
+    {
+      "role": "Chess Instructor — BCJCA",
+      "org": "BC Junior Chess Association · Morley Elementary",
+      "period": "oct 2025 → feb 2026",
+      "highlights": [
+        "taught weekly structured lessons to elementary students — designed the activities, kept them fun",
+        "strategic thinking, concentration, sportsmanship: the curriculum and the point"
+      ],
+      "stack": ["lesson design", "patience (statistically significant)"]
+    },
+    {
+      "role": "Member — District Student Advisory Council",
+      "org": "Burnaby School District (SD41)",
+      "period": "jun 2025 → present",
+      "highlights": [
+        "selected to represent Burnaby Central at the district level",
+        "collaborate across SD41 to surface priorities, deliver structured feedback, shape district policy"
+      ],
+      "stack": ["policy feedback", "district-level diplomacy"]
+    },
+    {
+      "role": "Co-Leader — Math & Computing Club",
+      "org": "Burnaby Central Secondary School",
+      "period": "sep 2024 → present",
+      "highlights": [
+        "direct weekly problem-solving sessions for 20+ members",
+        "competition prep for local and regional contests — the fun kind of homework"
+      ],
+      "stack": ["math", "competitive programming", "20+ regulars"]
+    },
+    {
+      "role": "Head of Marketing — The Shoreline Guardians",
+      "org": "The Shoreline Guardians",
+      "period": "oct 2024 → oct 2025",
+      "highlights": [
+        "scaled instagram 30 → 1,000+ followers in seven months — 700% activity lift, 800% profile-visit lift",
+        "directed weekly shoreline/park cleanups with 15+ volunteers — logistics, outreach, on-site ops"
+      ],
+      "stack": ["content strategy", "analytics", "cleanup logistics"]
+    }
+  ],
+  "coursework": [
+    { "id": "AP-CSA", "name": "AP Computer Science A", "status": "5 — with 100% course grade" },
+    { "id": "AP-CALC-BC", "name": "AP Calculus BC", "status": "4" }
+  ],
+  "certifications": [
+    {
+      "id": "HARVARD-CS50AI",
+      "name": "CS50's Introduction to Artificial Intelligence with Python",
+      "issuer": "Harvard University",
+      "date": "sep 2026",
+      "status": "certified — twelve projects shipped",
+      "file": "certs/cs50ai-harvard.pdf",
+      "verify": "https://cs50.harvard.edu/certificates/48b07fe6-0588-46dc-b2bf-6c032c49edf0"
+    },
+    {
+      "id": "HELSINKI-FSO",
+      "name": "Full Stack Open (7 ECTS)",
+      "issuer": "University of Helsinki",
+      "date": "sep 2026",
+      "status": "certified — deployed, not just watched",
+      "file": "certs/fullstack-open-helsinki.png",
+      "verify": "https://studies.helsinki.fi/stats/api/certificate/fullstackopen/en/b2f24283599e2e2990369a8da70bd9e4"
+    },
+    {
+      "id": "IMPERIAL-ML",
+      "name": "Mathematics for Machine Learning: Linear Algebra",
+      "issuer": "Imperial College London (Coursera)",
+      "date": "sep 2026",
+      "status": "certified",
+      "file": "certs/math-for-ml-linear-algebra.pdf",
+      "verify": "https://coursera.org/verify/U39U34EG3YDR"
+    }
+  ],
+  "awards": [
+    { "what": "Award of Excellence", "result": "Computer Programming 11 — 100%" },
+    { "what": "Waterloo Mathematics Competitions", "result": "Certificate of Distinction — University of Waterloo Math Contests (Gauss, Hypatia)\nSchool Champion — University of Waterloo Math Contests (Galois, Hypatia)" },
+    { "what": "Canadian Open Mathematics Challenge (COMC)", "result": "To be determined — Canadian Mathematical Society" },
+    { "what": "Principal's List", "result": "Grades 11, 12 — consecutive academic excellence across all STEM subjects" }
+  ],
+  "community": [
+    {
+      "org": "Instructor at One Academy",
+      "activity": "Academic Grading & Tutoring",
+      "hours": "64.00 hrs",
+      "highlights": "Graded the work of children ranging from grades K - 12."
+    },
+    {
+      "org": "ISKCON Vancouver",
+      "activity": "Krishna Janmashtami 2026",
+      "hours": "40.00 hrs",
+      "highlights": "Festival volunteer coordination, community assistance, and cultural event operations."
+    },
+    {
+      "org": "The Lower Mainland Green Team",
+      "activity": "Environmental Cleanup & Ravine Restoration",
+      "hours": "24.75 hrs",
+      "highlights": "Community trash cleanups & removed invasive plants (poison ivy, himalayan blackberry) around Byrne Creek Ravine across 8 sessions."
+    },
+    {
+      "org": "School (Burnaby Central)",
+      "activity": "School Facility Support",
+      "hours": "15.00 hrs",
+      "highlights": "Did lockers and student orientation prep around the school."
+    },
+    {
+      "org": "Chess Instructor at Morley",
+      "activity": "Elementary Chess Instruction",
+      "hours": "15.00 hrs",
+      "highlights": "Taught chess to children of grades 3, 4, and 5."
+    },
+    {
+      "org": "STEM Club",
+      "activity": "Assistive Devices",
+      "hours": "4.50 hrs",
+      "highlights": "Made assistive devices for community accessibility."
+    }
+  ],
+  "communityLog": [
+    { "org": "The Lower Mainland Green Team", "activity": "Picked up trash around the community", "hours": "3.25 hrs" },
+    { "org": "The Lower Mainland Green Team", "activity": "Removed invasive plants such as poison ivy and himalayan blackberry around Byrne Creek Ravine", "hours": "3.25 hrs" },
+    { "org": "Chess Instructor at Morley", "activity": "Taught chess to children of grades 3, 4, 5", "hours": "15.00 hrs" },
+    { "org": "Instructor at One Academy", "activity": "Graded the work of children ranging from grades K - 12.", "hours": "64.00 hrs" },
+    { "org": "The Lower Mainland Green Team", "activity": "Removed invasive plants such as poison ivy and himalayan blackberry around Byrne Creek Ravine", "hours": "3.25 hrs" },
+    { "org": "STEM Club", "activity": "Made assistive devices", "hours": "4.50 hrs" },
+    { "org": "The Lower Mainland Green Team", "activity": "Picked up trash around the community", "hours": "3.25 hrs" },
+    { "org": "The Lower Mainland Green Team", "activity": "Picked up trash around the community", "hours": "2.75 hrs" },
+    { "org": "The Lower Mainland Green Team", "activity": "Picked up trash around the community", "hours": "3.00 hrs" },
+    { "org": "School", "activity": "Did lockers around the school", "hours": "15.00 hrs" },
+    { "org": "The Lower Mainland Green Team", "activity": "Picked up trash around the community", "hours": "3.00 hrs" },
+    { "org": "The Lower Mainland Green Team", "activity": "Removed invasive plants such as poison ivy and himalayan blackberry", "hours": "3.00 hrs" },
+    { "org": "ISKCON Vancouver", "activity": "Krishna Janmashtami 2026", "hours": "40.00 hrs" }
+  ]
+}

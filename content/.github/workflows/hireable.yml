@@ -1,0 +1,15 @@
+# .github/workflows/hireable.yml — CI for a person
+name: hireable
+on: [push, recruiter_visit]
+
+jobs:
+  assert:
+    runs-on: kushalOS   # self-hosted, obviously
+    steps:
+      - uses: actions/coffee@v4
+        with:
+          cups: 3     # diminishing returns after this
+      - run: npm test
+        # tests/hireable.test.ts — 6/6 green, always
+      - run: ./deploy --friday --fearless
+        if: ${{ always() }}

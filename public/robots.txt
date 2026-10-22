@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kushalgangarapu.com/sitemap.xml

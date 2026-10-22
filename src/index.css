@@ -1,0 +1,467 @@
+@import "tailwindcss";
+
+/* latin-only font faces — the portfolio is english; cyrillic/greek/vietnamese/latin-ext
+   subsets (~196KB) never ship. To restore all subsets, swap back to
+   `@import "@fontsource-variable/jetbrains-mono"` etc. */
+@font-face {
+  font-family: 'JetBrains Mono Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  src: url('/fonts/jetbrains-mono-latin-wght-normal.woff2') format('woff2-variations');
+}
+@font-face {
+  font-family: 'JetBrains Mono Variable';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 100 800;
+  src: url('@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-italic.woff2') format('woff2-variations');
+}
+@font-face {
+  font-family: 'Newsreader Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('/fonts/newsreader-latin-wght-normal.woff2') format('woff2-variations');
+}
+@font-face {
+  font-family: 'Newsreader Variable';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('@fontsource-variable/newsreader/files/newsreader-latin-wght-italic.woff2') format('woff2-variations');
+}
+
+/* theme tokens resolve through runtime vars so themes can hot-swap */
+@theme inline {
+  --color-abyss: var(--abyss);
+  --color-chrome: var(--chrome);
+  --color-raised: var(--raised);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-inkdim: var(--ink-dim);
+  --color-inkfaint: var(--ink-faint);
+  --color-ember: var(--ember);
+  --color-ember-glow: var(--ember-glow);
+  --color-sage: var(--sage);
+  --color-tide: var(--tide);
+  --color-rust: var(--rust);
+  --color-violet: var(--violet);
+  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-serif: "Newsreader Variable", Georgia, "Times New Roman", serif;
+}
+
+/* kushal-midnight doubles as the recruiter view's "dark build" — scoping the
+   tokens to the attribute (not just :root) lets the artifact opt out of a
+   light app theme, which inheritance alone can't do */
+:root, [data-theme="kushal-midnight"] {
+  /* kushal-midnight — warm near-black, ember accent */
+  --editor-font-size: 13px;
+  --abyss: #0e0d0b;
+  --chrome: #161411;
+  --raised: #1f1c18;
+  --line: #2a2520;
+  --ink: #e8e0d4;
+  --ink-dim: #9a9184;
+  --ink-faint: #857d72;
+  --ember: #ff9e3d;
+  --sage: #9ebf9b;
+  --tide: #7da9b8;
+  --rust: #e0604f;
+  --violet: #b8a0d8;
+  --ember-glow: rgba(255, 158, 61, 0.14);
+}
+
+[data-theme="kushal-daylight"] {
+  /* warm paper — the IDE in daylight mode */
+  --abyss: #f5f1ea;
+  --chrome: #ece6db;
+  --raised: #e2dacc;
+  --line: #d3c9b8;
+  --ink: #2b251d;
+  --ink-dim: #5f564a;
+  --ink-faint: #6e665a;
+  --ember: #a84b0e;
+  --sage: #3f7a46;
+  --tide: #2e6f85;
+  --rust: #b03424;
+  --violet: #7155a8;
+  --ember-glow: rgba(168, 75, 14, 0.12);
+}
+
+[data-theme="demogod"] {
+  --abyss: #12081f;
+  --chrome: #1a0b2e;
+  --raised: #241140;
+  --line: #3b1f63;
+  --ink: #f2e9ff;
+  --ink-dim: #ab92d1;
+  --ink-faint: #9783bb;
+  --ember: #ff2ea6;
+  --sage: #2ee6c8;
+  --tide: #6cd5ff;
+  --rust: #ff5470;
+  --violet: #b967ff;
+  --ember-glow: rgba(255, 46, 166, 0.16);
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: var(--abyss);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  overscroll-behavior: none;
+}
+
+/* iOS/chrome-mobile: the URL bar makes 100vh taller than the visible area —
+   dvh tracks the real viewport, with % as the no-support fallback */
+#root { height: 100dvh; }
+html, body { min-height: 100%; }
+
+/* touch keyboards auto-zoom any focused input under ~16px — bump them all on
+   coarse pointers. terminal input already declares 16px explicitly. */
+@media (pointer: coarse) {
+  input, textarea, select { font-size: 16px !important; }
+}
+
+* { box-sizing: border-box; }
+::selection { background: var(--ember-glow); color: var(--ink); }
+
+/* thin scrollbars everywhere, editor-style */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border: 3px solid transparent;
+  border-radius: 8px;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); background-clip: padding-box; border: 3px solid transparent; }
+*::-webkit-scrollbar-corner { background: transparent; }
+
+/* blink for cursors & splash */
+@keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+.blink { animation: blink 1.06s step-end infinite; }
+
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+.fadein { animation: fadein 140ms ease-out; }
+
+@keyframes slideup { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.slideup { animation: slideup 160ms ease-out; }
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-3px, 2px); }
+  40% { transform: translate(3px, -1px); }
+  60% { transform: translate(-2px, -2px); }
+  80% { transform: translate(2px, 1px); }
+  100% { transform: translate(0); }
+}
+.glitching { animation: glitch 120ms linear infinite; }
+
+/* touch grass — the whole viewport goes to pasture for ~2.4s */
+.grassed::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 20% 110%, #3f7a3a 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 115%, #4c8f45 0%, transparent 55%),
+    linear-gradient(to top, #2d5a29 0%, rgba(45, 90, 41, 0.55) 35%, transparent 75%);
+  animation: fadein 300ms ease-out;
+}
+
+/* build splash progress bar */
+@keyframes buildbar { from { transform: scaleX(0); } 60% { transform: scaleX(0.82); } to { transform: scaleX(1); } }
+
+@keyframes pulse-subtle {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+@keyframes view-source-glow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(232, 122, 54, 0);
+    border-color: rgba(232, 122, 54, 0.45);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 16px 3px rgba(232, 122, 54, 0.45);
+    border-color: rgba(232, 122, 54, 0.95);
+    background-color: rgba(232, 122, 54, 0.25);
+  }
+}
+.animate-view-source {
+  animation: view-source-glow 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes main-ui-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 var(--ember-glow);
+    border-color: color-mix(in srgb, var(--ember) 55%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 14px 2px var(--ember-glow);
+    border-color: var(--ember);
+    background-color: color-mix(in srgb, var(--ember) 25%, transparent);
+  }
+}
+.animate-main-ui-btn {
+  animation: main-ui-pulse 2.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes main-ui-shimmer {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+  }
+  30%, 100% {
+    transform: translateX(250%) skewX(-20deg);
+  }
+}
+.animate-main-ui-shimmer {
+  animation: main-ui-shimmer 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* F5 morph — the IDE and the artifact never coexist, so their shared chrome
+   (titlebar/statusbar/deploy-chip) carries matching view-transition-names and
+   morphs in place while the root fades + rises underneath */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes vt-root-out { to { opacity: 0; transform: scale(0.985); } }
+  @keyframes vt-root-in { from { opacity: 0; transform: translateY(14px); } }
+  ::view-transition-old(root) {
+    animation: vt-root-out 420ms cubic-bezier(.2,.8,.2,1) both;
+  }
+  ::view-transition-new(root) {
+    animation: vt-root-in 420ms cubic-bezier(.2,.8,.2,1) both;
+  }
+  ::view-transition-group(titlebar),
+  ::view-transition-group(statusbar),
+  ::view-transition-group(deploy-chip),
+  ::view-transition-old(titlebar), ::view-transition-new(titlebar),
+  ::view-transition-old(statusbar), ::view-transition-new(statusbar),
+  ::view-transition-old(deploy-chip), ::view-transition-new(deploy-chip) {
+    animation-duration: 380ms;
+  }
+}
+
+/* recruiter artifact — the hero sits on the editor's own canvas: a faint
+   dot grid in the line colour, fading out toward the content below */
+.rv-hero {
+  background-image: radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+.rv-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent 55%, var(--abyss));
+}
+.rv-hero > * { position: relative; z-index: 1; }
+#readable-scroll ::selection { background: color-mix(in oklab, var(--ember) 26%, transparent); }
+
+/* keyboard users get visible focus — mouse users don't get noise */
+:focus-visible {
+  outline: 1px solid var(--ember);
+  outline-offset: 1px;
+}
+button:focus:not(:focus-visible), input:focus:not(:focus-visible) { outline: none; }
+
+/* reduced motion: kill the choreography, keep the content */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+  }
+  .blink { animation: none; opacity: 1; }
+}
+
+/* ---- markdown preview typography (the serif-prose signature) ---- */
+.mdprose { font-family: var(--font-serif); font-size: 16px; line-height: 1.65; color: var(--ink); }
+.mdprose h1, .mdprose h2, .mdprose h3 { font-family: var(--font-mono); font-weight: 600; line-height: 1.3; }
+.mdprose h1 { font-size: 26px; margin: 0 0 16px; }
+.mdprose h2 { font-size: 17px; margin: 32px 0 10px; color: var(--ember); }
+.mdprose h2::before { content: "## "; color: var(--ink-faint); }
+.mdprose h3 { font-size: 14px; margin: 22px 0 8px; color: var(--tide); }
+.mdprose h3::before { content: "### "; color: var(--ink-faint); }
+.mdprose p { margin: 0 0 14px; }
+.mdprose a { color: var(--tide); text-decoration: none; border-bottom: 1px dotted var(--tide); }
+.mdprose a:hover { color: var(--ember); border-bottom-color: var(--ember); }
+.mdprose strong { color: var(--ember); font-weight: 600; }
+.mdprose em { color: var(--tide); }
+.mdprose code {
+  font-family: var(--font-mono); font-size: 0.82em;
+  background: var(--raised); padding: 1px 5px; border-radius: 2px;
+  border: 1px solid var(--line);
+}
+.mdprose pre {
+  font-family: var(--font-mono); font-size: 12.5px; line-height: 1.55;
+  background: var(--chrome); border: 1px solid var(--line); border-radius: 3px;
+  padding: 14px 16px; overflow-x: auto; margin: 0 0 16px; position: relative;
+}
+.mdprose pre code { background: none; border: none; padding: 0; font-size: inherit; }
+.mdprose blockquote {
+  margin: 0 0 14px; padding: 8px 14px; border-left: 3px solid var(--ember);
+  background: var(--chrome); color: var(--ink-dim); font-style: italic;
+}
+.mdprose ul, .mdprose ol { margin: 0 0 14px; padding-left: 24px; }
+.mdprose li { margin-bottom: 5px; }
+.mdprose li::marker { color: var(--ember); font-family: var(--font-mono); }
+.mdprose hr { border: none; border-top: 1px dashed var(--line); margin: 26px 0; }
+.mdprose table { border-collapse: collapse; margin: 0 0 16px; font-family: var(--font-mono); font-size: 13px; }
+.mdprose th, .mdprose td { border: 1px solid var(--line); padding: 5px 12px; text-align: left; }
+.mdprose th { color: var(--ember); font-weight: 600; background: var(--chrome); }
+.mdprose img { max-width: 100%; margin: 4px 0 16px; border: 1px solid var(--line); border-radius: 3px; background: var(--chrome); }
+.mdprose .hanchor { opacity: 0; margin-left: 6px; font-size: 0.75em; text-decoration: none; border: none; }
+.mdprose h1:hover .hanchor, .mdprose h2:hover .hanchor, .mdprose h3:hover .hanchor { opacity: 1; }
+
+/* code-block copy button — materializes on hover like a good secret */
+.pre-wrap { position: relative; }
+
+/* syntax tokens (custom highlight, shared by CM + preview code blocks) */
+.tok-kw { color: var(--ember); }            /* keyword */
+.tok-str { color: var(--sage); }            /* string */
+.tok-num { color: var(--violet); }          /* number */
+.tok-com { color: var(--ink-faint); font-style: italic; } /* comment */
+.tok-type { color: var(--tide); }           /* type/class */
+.tok-fn { color: var(--ink); }              /* function name */
+.tok-op { color: var(--ink-dim); }          /* operator/punct */
+.tok-prop { color: var(--tide); }           /* property/key */
+.tok-var { color: var(--ink); }             /* variable */
+.tok-builtin { color: var(--ember); }       /* builtin/macro */
+.tok-def { color: var(--ink); }             /* definition */
+
+/* ---- codemirror lint: warm-theme squiggles instead of default red ---- */
+.cm-lintRange-error {
+  background-image: none !important;
+  text-decoration: underline wavy var(--rust);
+  text-decoration-skip-ink: none;
+}
+.cm-lintRange-warning { text-decoration: underline wavy var(--ember); text-decoration-skip-ink: none; }
+.cm-tooltip.cm-tooltip-lint {
+  background: var(--chrome);
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink);
+  padding: 6px 9px;
+}
+.cm-lint-marker { width: 0.9em; height: 0.9em; }
+.cm-gutter-lint .cm-gutterElement { padding-top: 1px; }
+.tok-err { color: var(--rust); text-decoration: underline wavy var(--rust); }
+
+/* ---- kushal-ls hover cards (shared by markdown preview + CodeMirror tooltip) ---- */
+.lsp-card {
+  display: block;
+  background: var(--chrome);
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-mono);
+  max-width: 340px;
+  text-align: left;
+}
+.lsp-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--line);
+}
+.lsp-head code {
+  font-size: 11.5px;
+  color: var(--ink);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.lsp-kind {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  font-size: 9.5px;
+  font-weight: 700;
+  border-radius: 2px;
+  flex-shrink: 0;
+  transform: translateY(1px);
+}
+.lsp-kind.k-class, .lsp-kind.k-interface { background: rgba(125, 169, 184, 0.18); color: var(--tide); }
+.lsp-kind.k-fn { background: rgba(184, 160, 216, 0.18); color: var(--violet); }
+.lsp-kind.k-const { background: rgba(255, 158, 61, 0.16); color: var(--ember); }
+.lsp-kind.k-module { background: rgba(158, 191, 155, 0.16); color: var(--sage); }
+.lsp-kind.k-field { background: rgba(138, 129, 119, 0.18); color: var(--ink-dim); }
+.lsp-doc {
+  padding: 8px 10px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
+.lsp-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 10px;
+  border-top: 1px solid var(--line);
+  font-size: 10px;
+}
+.lsp-link {
+  color: var(--tide); cursor: pointer;
+  background: none; border: 0; padding: 0; font: inherit;
+}
+.lsp-link:hover, .lsp-link:focus-visible { color: var(--ember); text-decoration: underline; }
+.lsp-link:focus-visible { outline: 1px solid var(--ember); outline-offset: 1px; }
+.lsp-ls { margin-left: auto; color: var(--ink-faint); font-size: 9px; }
+
+/* print styles: only the readable document should print */
+@media print {
+  html, body, #root {
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+  }
+  body { background: #fff !important; }
+  .no-print { display: none !important; }
+  .print-doc {
+    background: #fff !important;
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .print-doc * {
+    color: #1a1712 !important;
+    background: transparent !important;
+    border-color: #ccc !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+  }
+  .print-doc a { color: #8a5a20 !important; }
+  /* paper drops the blinking caret and the hero texture */
+  .rv-caret { display: none !important; }
+  .rv-hero { background-image: none !important; }
+  .rv-hero::after { display: none !important; }
+  /* the PDF can't carry hrefs — disclose the destination after external links.
+     mailtos with a query (?subject=…) would dump percent-encoding noise, and
+     anchors whose text already shows the destination (data-print-plain) would
+     just repeat themselves */
+  .print-doc main a[href^="http"]:not([data-print-plain])::after,
+  .print-doc main a[href^="mailto:"]:not([data-print-plain]):not([href*="?"])::after {
+    content: " — " attr(href);
+    font-family: var(--font-mono);
+    font-size: 0.72em;
+    color: #555 !important;
+  }
+}

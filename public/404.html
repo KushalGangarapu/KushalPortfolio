@@ -1,0 +1,44 @@
+<!doctype html>
+<!-- 404 — in voice. Netlify/GitHub Pages serve this for unknown routes automatically. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>404 — ENOENT · kushal</title>
+  <meta name="robots" content="noindex" />
+  <style>
+    body {
+      margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: #0e0d0b; color: #e8e0d4;
+      font-family: ui-monospace, 'Cascadia Mono', Consolas, Menlo, monospace;
+    }
+    main { max-width: 560px; padding: 24px; }
+    .path { color: #7da9b8; }
+    .err { color: #e0604f; }
+    .dim { color: #857d72; }
+    .ok { color: #9ebf9b; }
+    a { color: #ff9e3d; text-decoration: none; border-bottom: 1px dotted #ff9e3d; }
+    a:hover { border-bottom-style: solid; }
+    .term { border: 1px solid #211d18; background: #161411; padding: 20px 24px; border-radius: 4px; line-height: 2; font-size: 14px; }
+    .title { color: #9a9184; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 14px; }
+  </style>
+</head>
+<body>
+<main>
+  <div class="title">kushal — status: lost</div>
+  <div class="term">
+    <div><span class="ok">~ $</span> open <span class="path" id="p">that file</span></div>
+    <div><span class="err">ENOENT</span>: no such file or directory — this route never made it into the repo</div>
+    <div class="dim">hint: the portfolio is a single workspace; nothing real lives at this URL</div>
+    <div style="margin-top:14px">
+      <span class="ok">~ $</span> <a href="/">cd ~/kushal</a>
+      <span class="dim"> · </span>
+      <a href="/hire/">open the readable page</a>
+      <span class="dim"> · </span>
+      <a href="/resume.pdf">just the résumé</a>
+    </div>
+  </div>
+  <div class="dim" style="margin-top:14px;font-size:12px">exit code 1 — but the way home is right there</div>
+  <script>document.getElementById('p').textContent = location.pathname</script>
+</body>
+</html>

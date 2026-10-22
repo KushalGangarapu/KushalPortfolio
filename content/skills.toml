@@ -1,0 +1,44 @@
+# skills.toml — honest assessment, no numbers inflated
+
+[meta]
+schema = 1
+last_reviewed = "2026-09 — while 1,500 users watched"
+
+[languages]
+typescript = { level = "productive",   note = "this very site, and the calendar the school runs on" }
+python     = { level = "fluent",       note = "first revenue: a pygame game, grade 8, $100+" }
+java       = { level = "productive",   note = "AP CSA: 5, with a 100% course grade" }
+javascript = { level = "productive",   note = "see: every side project before typescript took over" }
+sql        = { level = "productive",   note = "postgres in prod, not in a tutorial" }
+html_css   = { level = "fluent",       note = "you are looking at it" }
+dart       = { level = "touched",      note = "exposure-level — listed because honesty scales" }
+cpp        = { level = "touched",      note = "same" }
+rust       = { level = "learning",     note = "on the resume because the intent is real" }
+
+[tools]
+react      = { level = "productive", note = "v19, in production, with actual users" }
+node       = { level = "productive", note = "express APIs serving 1,500+ students and faculty" }
+postgres   = { level = "productive", note = "see: wildcat-calendar.md — prisma on top" }
+prisma     = { level = "productive", note = "typed end to end; migrations in git" }
+nextjs     = { level = "productive", note = "the newspaper runs on it — app router, turbopack" }
+supabase   = { level = "working",    note = "auth + storage + rls, all of it real" }
+vite       = { level = "fluent",     note = "this site builds with it" }
+pwa        = { level = "productive", note = "service workers, offline caching, install prompts" }
+sse        = { level = "productive", note = "server-sent events — the calendar syncs live" }
+git        = { level = "fluent",     note = "the career graph on the left is real" }
+vercel     = { level = "productive", note = "two production deploys and counting" }
+godot      = { level = "working",    note = "skylands + the workshops i ran at daydream" }
+unity      = { level = "touched",    note = "enough to teach a workshop, not enough to brag" }
+pygame     = { level = "fluent",     note = "faithful-flight — sold to classmates, $100+" }
+
+[soft]
+public_speaking = { level = "practiced",    note = "debate club president — weekly reps" }
+event_ops       = { level = "battle-tested", note = "130+-hacker hackathon, 60-person student government" }
+marketing       = { level = "proven",       note = "instagram 30 → 1,000+ followers in 7 months" }
+mentoring       = { level = "patient",      note = "elementary chess instructor — the hardest audience" }
+sponsorship     = { level = "closing",      note = "$5,200+ raised for daydream vancouver" }
+docs            = { level = "actually_writes", note = "the newspaper site has a real README" }
+
+[[deprecated]]
+skill = "center div with tables"
+reason = "healed"

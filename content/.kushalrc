@@ -1,0 +1,21 @@
+# ~/.kushalrc — sourced on login, regretted on inspection
+
+export EDITOR=kushal
+export VISUAL=kushal
+export PAGER=less          # i will not elaborate
+export SPACES=2            # the correct answer
+export COFFEE_IV=1         # intravenous
+
+alias please='sudo'
+alias gca='git commit --amend --no-edit'   # a history of regrets
+alias gs='git status'                      # 400 times a day
+alias oops='git reset --soft HEAD~1'
+alias yolo='git push --force-with-lease'   # at least i'm polite about it
+
+# functions of questionable value
+hire()   { echo "great idea. see contact.env"; }
+sleep()  { echo "command not found: sleep"; }
+weekend(){ echo "what's a weekend?"; }
+
+set -o ignore-small-talk
+bind '"\C-k": open-command-palette'

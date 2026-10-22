@@ -1,0 +1,22 @@
+# .gitignore — things that shall not be committed
+
+node_modules/
+dist/
+*.log
+
+# life hygiene
+meetings/
+small-talk/
+8am-classes/
+group-project-deadweight/
+
+# feelings (tracked externally, badly)
+*.imposter-syndrome
+sleep-schedule.json
+motivation.pid
+
+# never again
+prod-hotfix-at-3am.patch
+final_v2_FINAL_rev4.docx
+
+# TODO(kushal): graduate — blocked on finals

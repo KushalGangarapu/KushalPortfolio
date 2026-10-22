@@ -1,0 +1,5 @@
+# Netlify-style _redirects — intentionally NO catch-all.
+# Every in-app route is hash-based (#/file/…, #/recruiter), so there are no
+# client-side paths to rewrite. A `/* /index.html 200` fallback would answer
+# 200 for every typo'd URL — soft-404s that poison crawling. Real files and
+# /hire/ serve directly; everything else correctly hits /404.html.
