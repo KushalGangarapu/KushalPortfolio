@@ -14,31 +14,31 @@ const BOOT_LINES = [
 export function Splash() {
   const boot = useIDE((s) => s.boot)
   const restored = useIDE((s) => s.restoredSession)
+  const still = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches
   const [step, setStep] = useState(0)
   const [fading, setFading] = useState(false)
   const booted = useRef(false)
 
   const LINES = restored ? ['restoring workspace… ok', ...BOOT_LINES] : BOOT_LINES
-  const stepMs = restored ? 90 : 220 // returning visitors already know the bit
+  const stepMs = still ? 40 : restored ? 90 : 220 // returning visitors or reduced motion users get a faster boot
 
   useEffect(() => {
     if (step < LINES.length) {
-      const t = setTimeout(() => setStep((s) => s + 1), restored ? 90 : 180 + Math.random() * stepMs)
+      const t = setTimeout(() => setStep((s) => s + 1), still ? 30 : restored ? 90 : 180 + Math.random() * stepMs)
       return () => clearTimeout(t)
     }
     if (!booted.current) {
       booted.current = true
-      const t1 = setTimeout(() => setFading(true), 350)
-      const t2 = setTimeout(() => boot(), 650)
+      const t1 = setTimeout(() => setFading(true), still ? 100 : 350)
+      const t2 = setTimeout(() => boot(), still ? 200 : 650)
       return () => {
         clearTimeout(t1)
         clearTimeout(t2)
       }
     }
-  }, [step, boot, LINES.length, restored, stepMs])
+  }, [step, boot, LINES.length, restored, stepMs, still])
 
-  // any click skips the ceremony — the IDE is behind this. the timer is
-  // tracked like every other: a remount inside the window would double-boot
+  // any click or keypress skips the ceremony — the IDE is behind this
   const skipTimer = useRef<number | undefined>(undefined)
   useEffect(() => () => clearTimeout(skipTimer.current), [])
   const skip = () => {
@@ -50,10 +50,17 @@ export function Splash() {
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="loading portfolio"
+      tabIndex={0}
       onClick={skip}
-      title="click to skip"
-      className={`fixed inset-0 z-[60] flex cursor-pointer flex-col items-center justify-center bg-abyss transition-opacity duration-300 ${
-        fading ? 'opacity-0' : 'opacity-100'
+      onKeyDown={(e) => {
+        if (e.key === ' ' || e.key === 'Enter' || e.key === 'Escape') skip()
+      }}
+      title="click or press space to skip"
+      className={`fixed inset-0 z-[60] flex cursor-pointer flex-col items-center justify-center bg-abyss outline-none transition-opacity duration-300 ${
+        fading ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
     >
       <div className="mb-6 select-none font-mono text-[clamp(28px,5vw,44px)] font-bold tracking-tight text-ink text-center">

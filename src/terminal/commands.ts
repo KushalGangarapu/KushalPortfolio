@@ -336,7 +336,7 @@ export function runPortfolioBuild() {
     { text: '▸ bundling projects/ → 5 modules, 0 circular deps, 1 circular sleep schedule', delay: 420 },
     { text: '▸ minifying excuses…', delay: 320 },
     { text: '✓ built in 0.42s — 0 warnings about career choices', kind: 'ok', delay: 420 },
-    { text: '→ artifact ready. press F5 or "build for production" to view.', kind: 'dim', delay: 200 },
+    { text: '→ artifact ready. press F5 or "Deploy Site" to view.', kind: 'dim', delay: 200 },
   ])
 }
 

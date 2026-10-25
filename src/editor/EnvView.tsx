@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Lock, LockOpen, Copy } from 'lucide-react'
 import { store } from '../state/store'
+import { copyToClipboard } from '../lib/clipboard'
 
 // what the redacted values "really" say when clicked — keys must actually be
 // redacted in contact.env or the entry sits dead (SOCIAL_BATTERY says '3%'
@@ -77,14 +78,10 @@ export function EnvView({ src }: { src: string }) {
                 {!redacted && (
                   <button
                     onClick={() => {
-                      if (!navigator.clipboard) {
-                        store.getState().toast(`no clipboard — ${key} = ${value}`, 'warn')
-                        return
-                      }
-                      void navigator.clipboard.writeText(value).then(
-                        () => store.getState().toast(`copied ${key}`, 'ok'),
-                        () => store.getState().toast(`clipboard refused — ${key} = ${value}`, 'warn'),
-                      )
+                      void copyToClipboard(value).then((ok) => {
+                        if (ok) store.getState().toast(`copied ${key}`, 'ok')
+                        else store.getState().toast(`clipboard refused — ${key} = ${value}`, 'warn')
+                      })
                     }}
                     title="copy value"
                     aria-label={`copy ${key}`}

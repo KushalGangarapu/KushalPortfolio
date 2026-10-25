@@ -12,19 +12,16 @@ import { exec } from './terminal/commands'
 import { getFile } from './vfs/fs'
 import { withViewTransition } from './lib/viewTransition'
 import { BuildSplash } from './ide/BuildSplash'
+import { Splash } from './ide/Splash'
 
 const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']
 
 export default function App() {
+  const booted = useIDE((s) => s.booted)
   const recruiterMode = useIDE((s) => s.recruiterMode)
   const building = useIDE((s) => s.building)
   const theme = useIDE((s) => s.settings['workbench.colorTheme'])
   const setMobile = useIDE((s) => s.setMobile)
-
-  // boot workspace immediately on launch
-  useEffect(() => {
-    store.getState().boot()
-  }, [])
 
   // theme → document attr + theme-color meta (boot path; applySettings
   // covers later changes)
@@ -41,13 +38,20 @@ export default function App() {
     document.documentElement.style.setProperty('--editor-font-size', `${fontSize}px`)
   }, [fontSize])
 
-  // mobile breakpoint
+  // mobile breakpoint — addEventListener with legacy addListener fallback for older WebKit / Safari
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 767px)')
     const apply = () => setMobile(mq.matches)
     apply()
-    mq.addEventListener('change', apply)
-    return () => mq.removeEventListener('change', apply)
+    if ('addEventListener' in mq) {
+      mq.addEventListener('change', apply)
+      return () => mq.removeEventListener('change', apply)
+    } else {
+      // @ts-expect-error legacy Safari fallback
+      mq.addListener(apply)
+      // @ts-expect-error legacy Safari fallback
+      return () => mq.removeListener(apply)
+    }
   }, [setMobile])
 
   // active tab → shareable hash (real files only)
@@ -99,17 +103,10 @@ export default function App() {
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
 
-  // document.title follows the active tab — the window title is real
-  useEffect(
-    () =>
-      useIDE.subscribe((s, prev) => {
-        const cur = getActiveTab(s)
-        if (cur !== getActiveTab(prev) && !s.recruiterMode) {
-          document.title = cur ? `${cur.split('/').pop()} — kushal` : 'kushal — a portfolio that is a code editor'
-        }
-      }),
-    [],
-  )
+  // website tab title should just be Kushal Gangarapu
+  useEffect(() => {
+    document.title = 'Kushal Gangarapu'
+  }, [])
 
   // global keybindings + konami
   useEffect(() => {
@@ -295,6 +292,7 @@ export default function App() {
       </a>
       {showReadable ? <ReadableView /> : <IdeShell />}
       {building && <BuildSplash />}
+      {!booted && <Splash />}
       <CommandPalette />
       <Dialogs />
       <Toasts />

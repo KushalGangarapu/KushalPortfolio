@@ -2,17 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="apple-touch-icon" href="/favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="Kushal Gangarapu — Full-stack developer, software engineer & student leader. Built the calendar 1,500+ students and faculty use daily. A portfolio that is an interactive code editor." />
     <meta name="keywords" content="Kushal Gangarapu, Kushal, Gangarapu, software engineer, full stack developer, web developer Vancouver, software engineer portfolio, student developer, Burnaby Central Secondary School, Burnaby Central, student leader, Co-Prime Minister, wildcat-calendar, BCSS calendar, BC Youth Developer Collective, BCYDC, Daydream Vancouver, React 19, TypeScript, JavaScript, PostgreSQL, Prisma, Python, Next.js, Tailwind CSS, CS50AI, Full Stack Open, Waterloo Math Contests, Gauss, Hypatia, Galois, Canadian Open Mathematics Challenge, youth hackathon organizer, summer 2027 internship" />
     <meta name="author" content="Kushal Gangarapu" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    <meta name="theme-color" content="#0e0d0b" />
+    <meta name="theme-color" content="#0e0d0b" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f5f1ea" media="(prefers-color-scheme: light)" />
     <link rel="canonical" href="https://kushalgangarapu.com/" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
 
     <!-- link unfurls — absolute URLs only; crawlers don't resolve relative paths -->
     <meta property="og:type" content="website" />
@@ -49,6 +54,7 @@
       "email": "smileykushal@gmail.com",
       "telephone": "+1-778-858-5616",
       "image": "https://kushalgangarapu.com/og.png",
+      "logo": "https://kushalgangarapu.com/favicon-192x192.png",
       "jobTitle": "Student Developer & Event Organizer",
       "address": {
         "@type": "PostalAddress",
@@ -83,7 +89,7 @@
     }
     </script>
 
-    <title>Kushal Gangarapu — a portfolio that is a code editor</title>
+    <title>Kushal Gangarapu</title>
     <style>
       /* avoid white flash before css loads */
       html, body, #root { height: 100%; background: #0e0d0b; }

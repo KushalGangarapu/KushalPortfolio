@@ -23,7 +23,7 @@ here is a picture of software.
 
 - **press `Ctrl+K`** — fuzzy-open any file, or run a `>` command
 - **press `` Ctrl+` ``** — toggle the terminal (`help` lists commands)
-- **recruiter?** — run `> Build for Production` in the palette, or hit `F5`,
+- **recruiter?** — run `> Deploy Site` in the palette, or hit `F5`,
   and this whole workspace compiles into one readable page
 - **nosy?** — `.kushalrc` and `.gitignore` are in the explorer. `settings.json`
   is a real settings file — edit it and watch the Problems tab respond. the

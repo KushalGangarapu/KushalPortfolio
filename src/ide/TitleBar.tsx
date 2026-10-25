@@ -144,7 +144,7 @@ export function TitleBar() {
             ])
           } },
         { sep: true },
-        { label: 'Build for Production', shortcut: 'F5', action: () => s().buildForProduction() },
+        { label: 'Deploy Site', shortcut: 'F5', action: () => s().buildForProduction() },
       ],
     },
     {
@@ -180,25 +180,31 @@ export function TitleBar() {
     <header className="flex h-9 shrink-0 select-none items-center gap-2 border-b border-line bg-chrome pr-2" data-anyopen={menu ? 1 : 0} style={{ viewTransitionName: 'titlebar' }}>
       {/* traffic lights */}
       {!mobile && (
-        <div className="group flex items-center gap-2 px-3">
+        <div className="group flex items-center gap-1.5 px-3">
           <button
-            aria-label="close"
+            aria-label="close window"
             onClick={() => s().setModal({ kind: 'save-close' })}
-            className="h-3 w-3 rounded-full bg-[#e0604f] transition-transform group-hover:scale-110"
-          />
+            className="flex h-6 w-4 items-center justify-center"
+          >
+            <span className="h-3 w-3 rounded-full bg-[#e0604f] transition-transform group-hover:scale-110" />
+          </button>
           <button
-            aria-label="minimize"
+            aria-label="minimize window"
             onClick={() => s().toast("can't minimize greatness", 'info')}
-            className="h-3 w-3 rounded-full bg-[#e0a54f] transition-transform group-hover:scale-110"
-          />
+            className="flex h-6 w-4 items-center justify-center"
+          >
+            <span className="h-3 w-3 rounded-full bg-[#e0a54f] transition-transform group-hover:scale-110" />
+          </button>
           <button
-            aria-label="maximize"
+            aria-label="maximize window"
             onClick={() => {
               if (document.fullscreenElement) document.exitFullscreen()
               else document.documentElement.requestFullscreen().catch(() => s().toast('fullscreen refused. the browser said no.', 'warn'))
             }}
-            className="h-3 w-3 rounded-full bg-[#7fbf6e] transition-transform group-hover:scale-110"
-          />
+            className="flex h-6 w-4 items-center justify-center"
+          >
+            <span className="h-3 w-3 rounded-full bg-[#7fbf6e] transition-transform group-hover:scale-110" />
+          </button>
         </div>
       )}
       {/* menus */}
@@ -246,11 +252,11 @@ export function TitleBar() {
           ⌘K
         </kbd>
       </button>
-      {/* Code to Main Site — animated CTA button in titlebar */}
+      {/* Deploy Site — animated CTA button in titlebar */}
       <button
         onClick={() => s().buildForProduction()}
-        title="Code to Main Site (readable portfolio) — F5"
-        aria-label="Code to Main Site"
+        title="Deploy Site (readable portfolio) — F5"
+        aria-label="Deploy Site F5"
         className="animate-main-ui-btn group relative flex h-6 shrink-0 items-center gap-1.5 overflow-hidden rounded-[3px] border border-ember/60 bg-ember/15 px-2.5 font-mono text-[11px] font-bold text-ink shadow-sm transition-all duration-200 hover:scale-105 hover:border-ember hover:bg-ember/30 hover:shadow-md active:scale-95"
       >
         {/* shimmering glossy light beam sweep (animation 1) */}
@@ -265,7 +271,7 @@ export function TitleBar() {
         </span>
         <Rocket size={11} className="shrink-0 text-ember transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:rotate-12" />
         <span className="tracking-tight">
-          <span className="hidden sm:inline">Code to </span>Main Site
+          Deploy Site
         </span>
         <kbd className="hidden rounded-[2px] border border-ember/40 bg-ember/20 px-1 text-[8.5px] font-bold text-ember lg:inline">
           F5
@@ -276,14 +282,16 @@ export function TitleBar() {
         <button
           onClick={() => s().toggleSidebar()}
           title="toggle sidebar (Ctrl+B)"
-          className={`rounded-sm p-1 ${sidebarOpen ? 'text-inkdim' : 'text-inkfaint'} hover:bg-raised hover:text-ink`}
+          aria-label="toggle sidebar (Ctrl+B)"
+          className={`flex h-6 w-6 items-center justify-center rounded-sm ${sidebarOpen ? 'text-inkdim' : 'text-inkfaint'} hover:bg-raised hover:text-ink`}
         >
           <PanelLeft size={14} />
         </button>
         <button
           onClick={() => s().togglePanel()}
           title="toggle panel (Ctrl+`)"
-          className={`rounded-sm p-1 ${panelOpen ? 'text-inkdim' : 'text-inkfaint'} hover:bg-raised hover:text-ink`}
+          aria-label="toggle panel (Ctrl+`)"
+          className={`flex h-6 w-6 items-center justify-center rounded-sm ${panelOpen ? 'text-inkdim' : 'text-inkfaint'} hover:bg-raised hover:text-ink`}
         >
           <PanelBottom size={14} />
         </button>

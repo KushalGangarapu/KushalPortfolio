@@ -141,7 +141,7 @@ export function SlidesView() {
 
   const s = slides[at]
   return (
-    <div className="flex h-full min-w-0 flex-col bg-abyss" role="region" aria-live="polite" aria-label={`slide ${at + 1} of ${slides.length}: ${s.title}`}>
+    <div className="relative flex h-full min-w-0 flex-col bg-abyss" role="region" aria-live="polite" aria-label={`slide ${at + 1} of ${slides.length}: ${s.title}`}>
       <button
         onClick={() => setI((v) => Math.max(0, v - 1))}
         aria-label="previous slide"

@@ -49,7 +49,7 @@ const STEPS: Step[] = [
     ms: 3400,
   },
   {
-    caption: 'F5 — "build for production" compiles the workspace into a recruiter-readable page',
+    caption: 'F5 — "Deploy Site" compiles the workspace into a recruiter-readable page',
     act: () => store.getState().toggleRecruiter(),
     ms: 3200,
   },

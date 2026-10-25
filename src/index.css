@@ -80,13 +80,13 @@
   --line: #d3c9b8;
   --ink: #2b251d;
   --ink-dim: #5f564a;
-  --ink-faint: #6e665a;
-  --ember: #a84b0e;
-  --sage: #3f7a46;
+  --ink-faint: #5e564a;
+  --ember: #9c440a;
+  --sage: #346c37;
   --tide: #2e6f85;
   --rust: #b03424;
   --violet: #7155a8;
-  --ember-glow: rgba(168, 75, 14, 0.12);
+  --ember-glow: rgba(156, 68, 10, 0.12);
 }
 
 [data-theme="demogod"] {
@@ -105,6 +105,15 @@
   --ember-glow: rgba(255, 46, 166, 0.16);
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 html, body, #root {
   height: 100%;
   margin: 0;
@@ -119,6 +128,16 @@ html, body, #root {
    dvh tracks the real viewport, with % as the no-support fallback */
 #root { height: 100dvh; }
 html, body { min-height: 100%; }
+
+/* fast, responsive touch response — eliminate 300ms tap delay on mobile devices */
+a, button, [role="button"], input, select, textarea {
+  touch-action: manipulation;
+}
+
+/* native momentum scrolling across iOS and touch devices */
+.overflow-y-auto, .overflow-x-auto, .overflow-auto {
+  -webkit-overflow-scrolling: touch;
+}
 
 /* touch keyboards auto-zoom any focused input under ~16px — bump them all on
    coarse pointers. terminal input already declares 16px explicitly. */

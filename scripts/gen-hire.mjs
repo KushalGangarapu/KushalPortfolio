@@ -237,6 +237,8 @@ const ld = {
   url: `${origin}/`,
   ...(env.EMAIL ? { email: env.EMAIL } : {}),
   ...(env.PHONE ? { telephone: env.PHONE } : {}),
+  image: `${origin}/og.png`,
+  logo: `${origin}/favicon-192x192.png`,
   jobTitle: 'Student Developer & Event Organizer',
   // still enrolled — alumniOf claims graduation that hasn't happened
   memberOf: { '@type': 'EducationalOrganization', name: edu?.institution ?? '' },
@@ -265,9 +267,13 @@ writeFileSync(
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <link rel="canonical" href="${origin}/hire/" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="icon" href="/favicon.png" type="image/png" />
-  <link rel="apple-touch-icon" href="/favicon.png" />
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml" />
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
 
   <meta property="og:type" content="profile" />
   <meta property="og:site_name" content="kushal" />
@@ -290,7 +296,7 @@ writeFileSync(
   <style>
     :root {
       --paper: #f5f1ea; --card: #fdfaf4; --ink: #2b251d; --dim: #5f564a;
-      --faint: #7a7164; --ember: #b25e10; --tide: #3d6e80; --sage: #4a7a46;
+      --faint: #5e564a; --ember: #9c440a; --tide: #3d6e80; --sage: #346c37;
       --line: #ddd4c4;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }

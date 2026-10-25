@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { X, Plus } from 'lucide-react'
 import { useIDE, store, isDirtyPath, tabTitle, tabExt } from '../state/store'
+import { copyToClipboard } from '../lib/clipboard'
 import type { Pane } from '../state/store'
 import { FileIcon } from '../editor/FileIcon'
 import { parseTabDrag } from './dnd'
@@ -49,8 +50,8 @@ export function TabBar({ pane, mobile }: { pane: Pane; mobile?: boolean }) {
           }, disabled: idx >= tabs.length - 1 },
         { label: 'Close All', action: () => s.closeAllTabs(pane.id) },
         { sep: true, label: '', action: () => {} },
-        { label: 'Copy Path', action: () => { void navigator.clipboard?.writeText(path); s.toast(`copied: ${path}`, 'ok') } },
-        { label: 'Copy Deep Link', action: () => { void navigator.clipboard?.writeText(`${location.origin}${location.pathname}#/file/${encodeURIComponent(path)}`); s.toast('deep link copied', 'ok') }, disabled: pseudo(path) },
+        { label: 'Copy Path', action: () => { void copyToClipboard(path).then((ok) => { if (ok) s.toast(`copied: ${path}`, 'ok'); else s.toast('clipboard refused', 'warn') }) } },
+        { label: 'Copy Deep Link', action: () => { void copyToClipboard(`${location.origin}${location.pathname}#/file/${encodeURIComponent(path)}`).then((ok) => { if (ok) s.toast('deep link copied', 'ok'); else s.toast('clipboard refused', 'warn') }) }, disabled: pseudo(path) },
         { label: 'Reveal in Explorer', action: () => { s.revealInExplorer(path) }, disabled: pseudo(path) },
         { label: 'Revert File', action: () => { s.revertFile(path); s.toast(`reverted ${path}`, 'ok') }, disabled: !isDirtyPath(store.getState(), path) || pseudo(path) },
         { sep: true, label: '', action: () => {} },

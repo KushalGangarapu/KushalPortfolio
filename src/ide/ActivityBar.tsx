@@ -26,11 +26,17 @@ export function ActivityBar() {
       <div className="flex h-11 shrink-0 items-center justify-around border-t border-line bg-chrome">
         {ITEMS.map(({ view, icon: Icon, label }) => {
           const active = activeView === view && sidebarOpen
+          const buttonLabel =
+            view === 'git' && dirtyCount > 0
+              ? `${label} (${dirtyCount})`
+              : view === 'achievements' && unlockedCount > 0
+                ? `${label} (${unlockedCount})`
+                : label
           return (
             <button
               key={view}
-              title={label}
-              aria-label={label}
+              title={buttonLabel}
+              aria-label={buttonLabel}
               aria-pressed={active}
               onClick={() => setView(view)}
               className={`relative flex h-full w-12 flex-col items-center justify-center gap-0.5 ${active ? 'text-ink' : 'text-inkfaint'}`}
@@ -39,7 +45,7 @@ export function ActivityBar() {
               <Icon size={18} strokeWidth={1.6} />
               {isTourist && <span className="font-mono text-[7px] leading-none">{RAIL_CAPTIONS[view]}</span>}
               {view === 'git' && dirtyCount > 0 && (
-                <span className="absolute top-1 right-2 min-w-[13px] rounded-full bg-ember px-0.5 text-center font-mono text-[8px] font-bold leading-[13px] text-abyss">
+                <span aria-hidden="true" className="absolute top-1 right-2 min-w-[13px] rounded-full bg-ember px-0.5 text-center font-mono text-[8px] font-bold leading-[13px] text-abyss">
                   {dirtyCount}
                 </span>
               )}
@@ -62,11 +68,17 @@ export function ActivityBar() {
     <nav aria-label="sections" className="flex w-12 shrink-0 flex-col items-center border-r border-line bg-chrome py-1">
       {ITEMS.map(({ view, icon: Icon, label }) => {
         const active = activeView === view && sidebarOpen
+        const buttonLabel =
+          view === 'git' && dirtyCount > 0
+            ? `${label} (${dirtyCount})`
+            : view === 'achievements' && unlockedCount > 0
+              ? `${label} (${unlockedCount})`
+              : label
         return (
           <button
             key={view}
-            title={label}
-            aria-label={label}
+            title={buttonLabel}
+            aria-label={buttonLabel}
             aria-pressed={active}
             onClick={() => setView(view)}
             className={`relative my-1 flex w-full flex-col items-center justify-center gap-0.5 transition-colors ${
@@ -77,12 +89,12 @@ export function ActivityBar() {
             <Icon size={20} strokeWidth={1.6} />
             {isTourist && <span className="font-mono text-[7px] leading-none">{RAIL_CAPTIONS[view]}</span>}
             {view === 'git' && dirtyCount > 0 && (
-              <span className="absolute bottom-1 right-1 min-w-[14px] rounded-full bg-ember px-0.5 text-center font-mono text-[8.5px] font-bold leading-[14px] text-abyss">
+              <span aria-hidden="true" className="absolute bottom-1 right-1 min-w-[14px] rounded-full bg-ember px-0.5 text-center font-mono text-[8.5px] font-bold leading-[14px] text-abyss">
                 {dirtyCount}
               </span>
             )}
             {view === 'achievements' && unlockedCount > 0 && (
-              <span className="absolute bottom-1 right-1 min-w-[14px] rounded-full bg-violet px-0.5 text-center font-mono text-[8.5px] font-bold leading-[14px] text-abyss">
+              <span aria-hidden="true" className="absolute bottom-1 right-1 min-w-[14px] rounded-full bg-violet px-0.5 text-center font-mono text-[8.5px] font-bold leading-[14px] text-abyss">
                 {unlockedCount}
               </span>
             )}

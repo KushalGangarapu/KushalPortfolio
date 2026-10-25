@@ -63,7 +63,14 @@ function FileHeader({ fm }: { fm: Record<string, string> }) {
       {fm.img && (() => {
         const img = getFile(fm.img)
         return img?.url ? (
-          <img src={img.url} alt={`${fm.title ?? 'project'} render`} className="block max-h-56 w-full border-t border-line bg-abyss object-contain" />
+          <img
+            src={img.url}
+            alt={`${fm.title ?? 'project'} render`}
+            loading="lazy"
+            decoding="async"
+            style={{ aspectRatio: '16/9' }}
+            className="block max-h-56 w-full border-t border-line bg-abyss object-contain"
+          />
         ) : null
       })()}
     </div>
@@ -205,7 +212,7 @@ function Welcome() {
             ['Ctrl+`', 'terminal (a real one)'],
             ['Ctrl+\\', 'split editor'],
             ['F6', 'self-driving tour'],
-            ['F5', 'build for production (recruiter mode)'],
+            ['F5', 'Deploy Site (recruiter mode)'],
           ].map(([k, d]) => (
             <div key={k} className="contents">
               <span className="justify-self-end border border-line bg-raised px-2 py-1 text-ember">{k}</span>

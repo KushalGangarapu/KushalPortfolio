@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
-import { Printer, Share2, Sun, Moon, Command, GitBranch, XCircle, AlertTriangle, Rocket, ChevronRight, Mail, FileText, FolderGit2, Briefcase, GraduationCap, BadgeCheck, BookOpen, Award, Copy, Check, HeartHandshake, Leaf, Camera } from 'lucide-react'
+import { Printer, Share2, Sun, Moon, Command, GitBranch, XCircle, AlertTriangle, Rocket, ChevronRight, Mail, FileText, FolderGit2, Briefcase, GraduationCap, BadgeCheck, BookOpen, Award, Copy, Check, HeartHandshake, Leaf, Camera, Code } from 'lucide-react'
 import kushalHeroImg from '../assets/kushal-hero.png'
 import { availabilityLong } from '../lib/availability'
 import { useIDE, store, contentOf, getActiveTab, isDirtyPath } from '../state/store'
@@ -9,6 +9,7 @@ import { parseFrontmatter } from '../editor/md-render'
 import { EXTENSIONS } from '../vfs/extensions'
 import { FileIcon } from '../editor/FileIcon'
 import { withViewTransition } from '../lib/viewTransition'
+import { copyToClipboard } from '../lib/clipboard'
 import { exec } from '../terminal/commands'
 import { parseEnv } from './parse'
 import type { ThemeId } from '../settings/theme-types'
@@ -83,8 +84,86 @@ const domainHref = (u: string | undefined): string => {
   return /^[\w-]+(\.[\w-]+)+([/?#][^\s]*)?$/.test(s) ? `https://${s}` : '#'
 }
 const smoothScroll = () => !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-const scrollToId = (id: string) =>
-  document.getElementById(id)?.scrollIntoView({ behavior: smoothScroll() ? 'smooth' : 'auto', block: 'start' })
+
+let scrollAnimationId: number | null = null
+
+const scrollToId = (id: string, smooth = true, onDone?: () => void) => {
+  const scroller = document.getElementById('readable-scroll')
+  if (!scroller) return
+
+  if (scrollAnimationId != null) {
+    cancelAnimationFrame(scrollAnimationId)
+    scrollAnimationId = null
+  }
+
+  const chrome = document.getElementById('readable-chrome')
+  const chromeHeight = chrome ? chrome.offsetHeight : 72
+
+  let targetTop = 0
+  if (id !== 'doc-intro') {
+    const target = document.getElementById(id)
+    if (!target) return
+    const scrollerRect = scroller.getBoundingClientRect()
+    const targetRect = target.getBoundingClientRect()
+    targetTop = Math.max(0, scroller.scrollTop + (targetRect.top - scrollerRect.top) - chromeHeight)
+  }
+
+  const shouldSmooth = smooth && smoothScroll()
+  if (!shouldSmooth) {
+    scroller.scrollTop = targetTop
+    onDone?.()
+    return
+  }
+
+  const startTop = scroller.scrollTop
+  const distance = targetTop - startTop
+  if (Math.abs(distance) < 2) {
+    scroller.scrollTop = targetTop
+    onDone?.()
+    return
+  }
+
+  // Duration tuned to feel responsive and swift: 260ms to 420ms
+  const duration = Math.min(420, Math.max(260, Math.abs(distance) * 0.1))
+  const startTime = performance.now()
+
+  let cancelled = false
+  const stopOnUser = () => {
+    cancelled = true
+    if (scrollAnimationId != null) {
+      cancelAnimationFrame(scrollAnimationId)
+      scrollAnimationId = null
+    }
+    scroller.removeEventListener('wheel', stopOnUser)
+    scroller.removeEventListener('touchstart', stopOnUser)
+    onDone?.()
+  }
+
+  scroller.addEventListener('wheel', stopOnUser, { passive: true, once: true })
+  scroller.addEventListener('touchstart', stopOnUser, { passive: true, once: true })
+
+  const step = (now: number) => {
+    if (cancelled) return
+    const elapsed = now - startTime
+    const progress = Math.min(1, elapsed / duration)
+    // easeOutQuart: rapid initial movement, silky smooth landing at target
+    const ease = 1 - Math.pow(1 - progress, 4)
+
+    scroller.scrollTop = Math.round(startTop + distance * ease)
+
+    if (progress < 1) {
+      scrollAnimationId = requestAnimationFrame(step)
+    } else {
+      scroller.scrollTop = targetTop
+      scrollAnimationId = null
+      scroller.removeEventListener('wheel', stopOnUser)
+      scroller.removeEventListener('touchstart', stopOnUser)
+      onDone?.()
+    }
+  }
+
+  scrollAnimationId = requestAnimationFrame(step)
+}
 
 /** mask `## ` at line-start inside fenced blocks so heading-splitting is
     fence-blind — a fence containing a fake heading mustn't split content */
@@ -483,15 +562,20 @@ const SECTIONS_NAV = [
 function Tabs({ items }: { items: readonly (typeof SECTIONS_NAV)[number][] }) {
   const [active, setActive] = useState<string>(items[0]?.id ?? '')
   const navRef = useRef<HTMLElement>(null)
+  const isNavigatingRef = useRef(false)
+  const navTimerRef = useRef<number | null>(null)
+
   useEffect(() => {
     const scroller = document.getElementById('readable-scroll')
     if (!scroller) return
-    // active = last section whose top passed a marker 30% down; when the page
-    // bottoms out, the trailing sections (which can't rise that far) win
+
     const spy = () => {
+      if (isNavigatingRef.current) return
       const top = scroller.getBoundingClientRect().top
-      const bottomedOut = scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight < 8
-      const marker = top + scroller.clientHeight * (bottomedOut ? 0.9 : 0.3)
+      const chrome = document.getElementById('readable-chrome')
+      const chromeHeight = chrome ? chrome.offsetHeight : 72
+      const bottomedOut = scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight < 16
+      const marker = top + chromeHeight + (bottomedOut ? scroller.clientHeight * 0.7 : 60)
       let current = items[0]?.id ?? ''
       for (const it of items) {
         const el = document.getElementById(it.id)
@@ -499,19 +583,31 @@ function Tabs({ items }: { items: readonly (typeof SECTIONS_NAV)[number][] }) {
       }
       setActive(current)
     }
+
     spy()
     scroller.addEventListener('scroll', spy, { passive: true })
     window.addEventListener('resize', spy)
     return () => {
       scroller.removeEventListener('scroll', spy)
       window.removeEventListener('resize', spy)
+      if (navTimerRef.current) clearTimeout(navTimerRef.current)
     }
   }, [items])
 
   useEffect(() => {
     if (!active || !navRef.current) return
     const btn = navRef.current.querySelector<HTMLElement>('[aria-current="location"]')
-    btn?.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' })
+    const nav = navRef.current
+    if (!btn) return
+    const btnLeft = btn.offsetLeft
+    const btnRight = btnLeft + btn.offsetWidth
+    const scrollLeft = nav.scrollLeft
+    const visibleWidth = nav.clientWidth
+    if (btnLeft < scrollLeft) {
+      nav.scrollTo({ left: Math.max(0, btnLeft - 16), behavior: 'smooth' })
+    } else if (btnRight > scrollLeft + visibleWidth) {
+      nav.scrollTo({ left: btnRight - visibleWidth + 16, behavior: 'smooth' })
+    }
   }, [active])
 
   return (
@@ -523,8 +619,15 @@ function Tabs({ items }: { items: readonly (typeof SECTIONS_NAV)[number][] }) {
             key={it.id}
             aria-current={on ? 'location' : undefined}
             onClick={() => {
-              scrollToId(it.id)
-              document.getElementById(it.id)?.querySelector<HTMLElement>('h1, h2')?.focus({ preventScroll: true })
+              setActive(it.id)
+              isNavigatingRef.current = true
+              if (navTimerRef.current) clearTimeout(navTimerRef.current)
+              scrollToId(it.id, true, () => {
+                isNavigatingRef.current = false
+              })
+              navTimerRef.current = window.setTimeout(() => {
+                isNavigatingRef.current = false
+              }, 500)
             }}
             className={`flex shrink-0 items-center gap-1.5 border-r border-t-2 border-line px-3.5 font-mono text-[12px] transition-colors ${
               on ? 'border-t-ember bg-abyss text-ink' : 'border-t-transparent text-inkfaint hover:bg-raised hover:text-ink'
@@ -594,14 +697,14 @@ function StatusBar({ errors, theme, onExit }: { errors: number; theme: string; o
         {/* the deploy chip, home again — same slot the IDE builds from */}
         <button
           onClick={onExit}
-          title="back to source (F5)"
-          aria-label="back to source — return to the IDE"
+          title="View Source (F5)"
+          aria-label="View Source (F5)"
           style={{ viewTransitionName: 'deploy-chip' }}
           className="animate-view-source mx-1 my-1 flex items-center gap-1.5 rounded-[3px] bg-ember px-2.5 font-black tracking-wide text-abyss shadow-md transition-all hover:bg-ember/90 hover:scale-105 active:scale-95"
         >
-          <Rocket size={11} className="rotate-180" />
-          <span className="hidden sm:inline font-bold">back to source</span>
-          <span className="sm:hidden font-bold">back</span>
+          <Code size={11} />
+          <span className="hidden sm:inline font-bold">View Source</span>
+          <span className="sm:hidden font-bold">Source</span>
           <kbd className="hidden rounded-[2px] border border-abyss/40 bg-abyss/10 px-1 text-[8.5px] font-bold sm:inline">F5</kbd>
         </button>
         <span className="hidden h-full items-center px-2 tabular-nums sm:flex">Ln {ln}, Col 1</span>
@@ -863,7 +966,8 @@ export function ReadableView() {
   // session; F5-ing back and forth shouldn't spam the bell
   useEffect(() => {
     const prev = window.location.hash
-    document.title = 'Kushal Gangarapu — portfolio (production build)'
+    window.history.replaceState(null, '', '#/recruiter')
+    document.title = 'Kushal Gangarapu'
     const s = store.getState()
     if (s.maybeHint('deployed-notif')) {
       s.notify({
@@ -890,7 +994,7 @@ export function ReadableView() {
         const restore =
           prev && prev !== '#/recruiter' ? prev : tab ? `#/file/${encodeURIComponent(tab)}` : window.location.pathname + window.location.search
         window.history.replaceState(null, '', restore)
-        document.title = tab ? `${tab.split('/').pop()} — kushal` : 'kushal — a portfolio that is a code editor'
+        document.title = 'Kushal Gangarapu'
       }
       if (hadFocus && document.contains(hadFocus)) hadFocus.focus({ preventScroll: true })
       else document.getElementById('main-editor')?.focus({ preventScroll: true })
@@ -968,7 +1072,7 @@ export function ReadableView() {
       // pinned so the artifact carries the IDE's theme even where an
       // inherited html data-theme would disagree
       data-theme={ideTheme}
-      className="print-doc fixed inset-0 z-40 overflow-y-auto overflow-x-hidden bg-abyss text-ink outline-none motion-safe:scroll-smooth pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))]"
+      className="print-doc fixed inset-0 z-40 overflow-y-auto overflow-x-hidden bg-abyss text-ink outline-none pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))]"
     >
       {/* top chrome — the IDE's own titlebar, morphed. same view-transition
           name, so F5 slides the real titlebar into this one instead of cutting */}
@@ -982,11 +1086,13 @@ export function ReadableView() {
           </div>
           <button
             onClick={exit}
+            title={mobile ? 'Source (F5)' : 'View Source (F5)'}
+            aria-label="View Source (F5)"
             className="animate-view-source flex shrink-0 items-center gap-1.5 rounded-sm border border-ember/60 bg-ember/15 px-2.5 py-1 font-mono text-[11px] font-bold text-ink shadow-sm transition-all hover:scale-105 hover:border-ember hover:bg-ember/30 hover:shadow-md active:scale-95"
           >
-            <span className="font-extrabold text-ember">‹/›</span>
-            <span className="font-bold text-ink">{mobile ? 'source' : 'view source'}</span>
-            <kbd className="hidden rounded-sm border border-ember/40 bg-ember/20 px-1 text-[9px] font-bold text-ember sm:inline">F5</kbd>
+            <Code size={12} className="text-ember" />
+            <span className="font-bold text-ink">{mobile ? 'Source' : 'View Source'}</span>
+            <kbd className="hidden rounded-sm border border-ember/40 bg-ember/20 px-1 text-[9px] font-bold text-ink sm:inline">F5</kbd>
           </button>
           {visitorCommits.length > 0 && (
             <span className="hidden shrink-0 font-mono text-[10px] text-violet lg:block">
@@ -1011,14 +1117,10 @@ export function ReadableView() {
                 // /hire/ is the static build of this page — it lands for a
                 // recruiter even with JS off, where #/recruiter can't
                 const url = `${location.origin}/hire/`
-                if (!navigator.clipboard) {
-                  store.getState().toast(`no clipboard here — the link is ${url}`, 'warn')
-                  return
-                }
-                void navigator.clipboard.writeText(url).then(
-                  () => store.getState().toast('shareable link copied — works even with JS off', 'ok'),
-                  () => store.getState().toast(`clipboard refused — the link is ${url}`, 'warn'),
-                )
+                void copyToClipboard(url).then((ok) => {
+                  if (ok) store.getState().toast('shareable link copied — works even with JS off', 'ok')
+                  else store.getState().toast(`clipboard refused — the link is ${url}`, 'warn')
+                })
               }}
               className="flex items-center gap-1.5 rounded-sm px-2 py-1 font-mono text-[10.5px] text-inkdim transition-colors hover:bg-raised hover:text-ink"
               title="copy the /hire/ link — works even with JS off"
@@ -1065,8 +1167,8 @@ export function ReadableView() {
         </div>
 
         {/* ── hero: the pitch on the left, the profile as code on the right ── */}
-        <section id="doc-intro" aria-labelledby="rv-h1" className="rv-hero relative scroll-mt-20 overflow-hidden border-b border-line">
-          <div className={`${sectionWrap} grid items-center gap-14 pb-20 pt-16 md:pb-24 md:pt-20 lg:pb-36 xl:pb-24 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]`}>
+        <section id="doc-intro" aria-labelledby="rv-h1" className="rv-hero relative scroll-mt-[72px] overflow-visible border-b border-line">
+          <div className={`${sectionWrap} grid items-center gap-14 pb-20 pt-16 md:pb-24 md:pt-20 lg:pb-40 xl:pb-36 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]`}>
             <div className="min-w-0">
               <h1
                 id="rv-h1"
@@ -1127,8 +1229,8 @@ export function ReadableView() {
 
             {/* the profile, as the TypeScript it would be — with the editor's
                 own hover card pinned to the symbol, photo and all */}
-            {/* sm:mb-52 reserves room for the hover card and photo card hanging off the window's foot */}
-            <div className="relative min-w-0 sm:mb-48 md:mb-52 lg:pl-4">
+            {/* sm:mb-64 md:mb-72 lg:mb-96 xl:mb-72 reserves room for the hover card and photo card hanging off the window's foot */}
+            <div className="relative min-w-0 sm:mb-64 md:mb-72 lg:mb-96 xl:mb-72 lg:pl-4">
               <Window title="kushal.ts" ext="ts">
                 <pre className="overflow-x-auto py-4 font-mono text-[12.5px] leading-[1.85]" aria-label="profile, written as code">
                   {code.map((line, i) => (
@@ -1180,8 +1282,12 @@ export function ReadableView() {
                     <img
                       src={kushalHeroImg}
                       alt={intro.name}
+                      width={450}
+                      height={600}
+                      fetchPriority="high"
                       className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                       loading="eager"
+                      decoding="async"
                     />
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-abyss/95 via-abyss/60 to-transparent px-3 pb-3 pt-8">
                       <p className="font-mono text-[11.5px] font-bold leading-normal text-ink">{intro.name}</p>
@@ -1228,7 +1334,7 @@ export function ReadableView() {
         )}
 
         {/* ── work ── */}
-        <section id="doc-work" aria-labelledby="doc-work-h" className="scroll-mt-20 py-24 md:py-28">
+        <section id="doc-work" aria-labelledby="doc-work-h" className="scroll-mt-[72px] pt-8 pb-20 md:pt-10 md:pb-24">
           <div className={sectionWrap}>
             <SectionHead
               n="01"
@@ -1246,7 +1352,16 @@ export function ReadableView() {
                 <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
                   {flagship.fm.img && (/^https?:\/\//i.test(flagship.fm.img) || /^\/[^/]/.test(flagship.fm.img)) ? (
                     <Window title={flagship.path} url={flagship.repoUrl ?? flagship.fm.title}>
-                      <img src={flagship.fm.img} alt={`${flagship.fm.title ?? flagship.name} — screenshot`} loading="lazy" decoding="async" className="block w-full" />
+                      <img
+                        src={flagship.fm.img}
+                        alt={`${flagship.fm.title ?? flagship.name} — screenshot`}
+                        width={1024}
+                        height={590}
+                        style={{ aspectRatio: '1024/590' }}
+                        loading="lazy"
+                        decoding="async"
+                        className="block w-full"
+                      />
                     </Window>
                   ) : (
                     <div />
@@ -1353,7 +1468,7 @@ export function ReadableView() {
         </section>
 
         {/* ── experience: the graph, then the commits ── */}
-        <section id="doc-experience" aria-labelledby="doc-experience-h" className="scroll-mt-20 border-y border-line bg-chrome/40 py-24 md:py-28">
+        <section id="doc-experience" aria-labelledby="doc-experience-h" className="scroll-mt-[72px] border-y border-line bg-chrome/40 pt-8 pb-20 md:pt-10 md:pb-24">
           <div className={sectionWrap}>
             <SectionHead
               n="02"
@@ -1475,7 +1590,7 @@ export function ReadableView() {
         </section>
 
         {/* ── skills: the extensions panel ── */}
-        <section id="doc-skills" aria-labelledby="doc-skills-h" className="scroll-mt-20 py-24 md:py-28">
+        <section id="doc-skills" aria-labelledby="doc-skills-h" className="scroll-mt-[72px] pt-8 pb-20 md:pt-10 md:pb-24">
           <div className={sectionWrap}>
             <SectionHead
               n="03"
@@ -1542,16 +1657,16 @@ export function ReadableView() {
 
         {/* ── certificates & awards ── */}
         {hasEducation && (
-          <section id="doc-education" aria-labelledby="doc-education-h" className="scroll-mt-20 border-y border-line bg-chrome/40 py-24 md:py-28">
+          <section id="doc-education" aria-labelledby="doc-education-h" className="scroll-mt-[72px] border-y border-line bg-chrome/40 pt-8 pb-20 md:pt-10 md:pb-24">
             <div className={sectionWrap}>
               <SectionHead
                 n="04"
                 file="certs/"
                 ext="pdf"
-                title="Education & credentials"
+                title="Education & Certificates"
                 src="certs/"
                 id="doc-education-h"
-                sub={<span>{exp.education.length + exp.certifications.length + exp.coursework.length + exp.awards.length} credentials</span>}
+                sub={<span>{exp.education.length + exp.certifications.length + exp.coursework.length + exp.awards.length} certificates</span>}
               />
 
               {/* formal education */}
@@ -1640,7 +1755,7 @@ export function ReadableView() {
 
         {/* ── community help ── */}
         {hasCommunity && (
-          <section id="doc-community" aria-labelledby="doc-community-h" className="scroll-mt-20 py-24 md:py-28">
+          <section id="doc-community" aria-labelledby="doc-community-h" className="scroll-mt-[72px] pt-8 pb-20 md:pt-10 md:pb-24">
             <div className={sectionWrap}>
               <SectionHead
                 n="05"
@@ -1707,7 +1822,7 @@ export function ReadableView() {
         )}
 
         {/* ── contact: the address big, the env file leaked beside it ── */}
-        <section id="doc-contact" aria-labelledby="doc-contact-h" className="scroll-mt-20 border-t border-line bg-chrome/40 py-24 md:py-28">
+        <section id="doc-contact" aria-labelledby="doc-contact-h" className="scroll-mt-[72px] border-t border-line bg-chrome/40 pt-8 pb-20 md:pt-10 md:pb-24">
           <div className={`${sectionWrap} grid items-start gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]`}>
             <div className="min-w-0">
               <SectionHead n="06" file="contact.env" ext="env" title="Contact" src="contact.env" dirty={dirty('contact.env')} id="doc-contact-h" />
@@ -1802,18 +1917,15 @@ function CopyEmailButton({ email }: { email: string }) {
   return (
     <button
       onClick={() => {
-        if (!navigator.clipboard) {
-          store.getState().toast(`no clipboard here — it's ${email}`, 'warn')
-          return
-        }
-        void navigator.clipboard.writeText(email).then(
-          () => {
+        void copyToClipboard(email).then((ok) => {
+          if (ok) {
             setCopied(true)
             clearTimeout(timer.current)
             timer.current = window.setTimeout(() => setCopied(false), 1400)
-          },
-          () => store.getState().toast(`clipboard refused — it's ${email}`, 'warn'),
-        )
+          } else {
+            store.getState().toast(`clipboard refused — it's ${email}`, 'warn')
+          }
+        })
       }}
       title={`copy ${email}`}
       className="no-print inline-flex items-center gap-2 rounded-[3px] border border-line bg-chrome px-4 py-2.5 font-mono text-[12.5px] text-ink transition-colors hover:border-ember/70"

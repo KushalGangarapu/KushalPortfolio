@@ -312,7 +312,7 @@ export function Dialogs() {
                 ['F2', 'rename symbol (raw view)'],
                 ['F12 / Shift+F12', 'goto def / find refs (raw view)'],
                 ['Ctrl+Click', 'go to definition (anywhere)'],
-                ['F5', 'build for production'],
+                ['F5', 'Deploy Site'],
                 ['F6', 'take the tour'],
                 ['↑↑↓↓←→←→BA', 'demo god mode'],
                 ['Esc', 'close everything'],

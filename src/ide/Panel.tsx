@@ -137,6 +137,9 @@ export function Panel() {
         role="separator"
         aria-orientation="horizontal"
         aria-label="resize panel"
+        aria-valuenow={Math.round(height)}
+        aria-valuemin={80}
+        aria-valuemax={typeof window !== 'undefined' ? Math.max(120, window.innerHeight - 80) : 600}
         tabIndex={0}
         onMouseDown={startDrag}
         onKeyDown={(e) => {
@@ -171,7 +174,7 @@ export function Panel() {
             onClick={() => setPanelHeight(140)}
             title="collapse"
             aria-label="collapse panel"
-            className="rounded-sm p-1 text-inkfaint hover:bg-raised hover:text-ink"
+            className="flex h-6 w-6 items-center justify-center rounded-sm text-inkfaint hover:bg-raised hover:text-ink"
           >
             <ChevronDown size={14} />
           </button>
@@ -179,7 +182,7 @@ export function Panel() {
             onClick={togglePanel}
             title="close panel (Ctrl+`)"
             aria-label="close panel"
-            className="rounded-sm p-1 text-inkfaint hover:bg-raised hover:text-ink"
+            className="flex h-6 w-6 items-center justify-center rounded-sm text-inkfaint hover:bg-raised hover:text-ink"
           >
             <X size={14} />
           </button>

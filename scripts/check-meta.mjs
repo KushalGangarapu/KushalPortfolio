@@ -79,7 +79,7 @@ if (homepage) {
 
 // ---- referenced assets must exist — a deleted og.png ships a broken card
 // preview on every link share, silently ----
-for (const asset of ['og.png', 'favicon.svg', 'resume.pdf']) {
+for (const asset of ['og.png', 'favicon.svg', 'favicon.ico', 'favicon-48x48.png', 'apple-touch-icon.png', 'site.webmanifest', 'resume.pdf']) {
   check(existsSync(join(ROOT, 'public', asset)), `public/${asset} missing — referenced from index.html`)
 }
 

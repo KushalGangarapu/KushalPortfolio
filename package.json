@@ -9,6 +9,7 @@
     "prebuild": "node scripts/check-resume.mjs && node scripts/gen-sitemap.mjs && node scripts/gen-hire.mjs && node scripts/check-meta.mjs",
     "build": "tsc -b && vite build",
     "test": "node scripts/check-resume.mjs && node scripts/check-meta.mjs",
+    "gen:favicons": "node scripts/gen-favicons.mjs",
     "lint": "oxlint",
     "preview": "vite preview"
   },

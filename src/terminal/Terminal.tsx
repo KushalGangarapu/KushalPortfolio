@@ -282,8 +282,8 @@ export function Terminal() {
         onKeyDown={onKey}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
-        // 1px + opacity ~0 + 16px font: focusable on iOS without triggering auto-zoom
-        className="absolute bottom-0 left-0 h-px w-full opacity-[0.01] text-[16px]"
+        // sr-only + 16px font: focusable and accessible without contrast scanner false-positives or iOS auto-zoom
+        className="sr-only text-[16px]"
         aria-label="terminal input"
         autoCapitalize="off"
         autoCorrect="off"

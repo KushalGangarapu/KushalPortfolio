@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { copyToClipboard } from '../lib/clipboard'
 import { ACHIEVEMENTS } from '../achievements/defs'
 import { useIDE, store } from '../state/store'
 
@@ -101,13 +102,15 @@ function ShareCard({ got, total }: { got: number; total: number }) {
   return (
     <button
       onClick={() => {
-        void navigator.clipboard?.writeText(
+        void copyToClipboard(
           `i unlocked ${got}/${total} achievements in a portfolio that is a code editor — https://kushalgangarapu.com`,
-        ).then(() => {
-          setCopied(true)
-          clearTimeout(timer.current)
-          timer.current = window.setTimeout(() => setCopied(false), 1400)
-        }).catch(() => {})
+        ).then((ok) => {
+          if (ok) {
+            setCopied(true)
+            clearTimeout(timer.current)
+            timer.current = window.setTimeout(() => setCopied(false), 1400)
+          }
+        })
       }}
       title="copy a brag-line to the clipboard"
       className="flex items-center gap-1 text-inkfaint transition-colors hover:text-ember"

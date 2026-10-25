@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Check, Copy } from 'lucide-react'
+import { copyToClipboard } from '../lib/clipboard'
 
 export function CopyBtn({ text }: { text: string }) {
   const [copied, setCopied] = useState(false)
@@ -12,13 +13,13 @@ export function CopyBtn({ text }: { text: string }) {
       title="copy"
       aria-label="copy code block"
       onClick={() => {
-        // only flash the check when the write resolves — a rejected promise
-        // (denied permission, insecure context) must not lie about copying
-        void navigator.clipboard?.writeText(text).then(() => {
-          setCopied(true)
-          clearTimeout(timer.current)
-          timer.current = window.setTimeout(() => setCopied(false), 1200)
-        }).catch(() => {})
+        void copyToClipboard(text).then((ok) => {
+          if (ok) {
+            setCopied(true)
+            clearTimeout(timer.current)
+            timer.current = window.setTimeout(() => setCopied(false), 1200)
+          }
+        })
       }}
     >
       {copied ? <Check size={11} className="text-sage" /> : <Copy size={11} />}

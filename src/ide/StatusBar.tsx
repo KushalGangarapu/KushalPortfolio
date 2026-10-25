@@ -66,18 +66,19 @@ export function StatusBar() {
   const errors = problems.filter((p) => p.severity === 'error').length
   const warns = problems.filter((p) => p.severity === 'warn').length
 
+  const branchText = `${visitorCommits.length ? 'visitor/you' : 'main'}${dirty ? `*${dirty}` : ''}`
   return (
-    <footer aria-label="status" className="relative z-30 flex h-6 shrink-0 select-none items-stretch justify-between border-t border-line bg-chrome font-mono text-[10.5px] text-inkdim" style={{ viewTransitionName: 'statusbar' }}>
+    <footer aria-label="status" className="relative z-30 flex h-6 shrink-0 select-none items-stretch justify-between border-t border-line bg-chrome font-mono text-[10.5px] text-inkdim box-content pb-[env(safe-area-inset-bottom,0px)]" style={{ viewTransitionName: 'statusbar' }}>
       <div className="flex items-stretch">
-        <button onClick={() => s().ensureView('git')} aria-label={isTourist ? 'career timeline — as git commits' : 'branch — view source control'} className={item} title={isTourist ? 'career timeline — as git commits' : 'branch — view source control'}>
+        <button onClick={() => s().ensureView('git')} aria-label={isTourist ? `career timeline: ${branchText}` : `branch: ${branchText} — view source control`} className={item} title={isTourist ? 'career timeline — as git commits' : 'branch — view source control'}>
           <GitBranch size={11} className={visitorCommits.length ? 'text-violet' : 'text-ember'} />
-          <span>{visitorCommits.length ? 'visitor/you' : 'main'}{dirty ? `*${dirty}` : ''}</span>
+          <span>{branchText}</span>
         </button>
-        <button onClick={() => s().ensureView('git')} aria-label={isTourist ? 'commits — every one is a real career beat' : 'commits ahead of graduation'} className={item} title={isTourist ? 'commits — every one is a real career beat' : 'commits ahead of graduation'}>
+        <button onClick={() => s().ensureView('git')} aria-label={isTourist ? `commits ↑${COMMITS.length} ↓0 — career timeline` : `commits ↑${COMMITS.length} ↓0 — ahead of graduation`} className={item} title={isTourist ? 'commits — every one is a real career beat' : 'commits ahead of graduation'}>
           <RefreshCw size={10} className="text-tide" />
           <span>↑{COMMITS.length} ↓0</span>
         </button>
-        <button onClick={() => s().setPanelTab('problems')} aria-label={isTourist ? 'issues — the jokes are intentional' : 'problems'} className={`hidden ${item} sm:flex`} title={isTourist ? 'issues — the jokes are intentional' : 'problems'}>
+        <button onClick={() => s().setPanelTab('problems')} aria-label={isTourist ? `issues: ${errors} errors, ${warns} warnings` : `problems: ${errors} errors, ${warns} warnings`} className={`hidden ${item} sm:flex`} title={isTourist ? 'issues — the jokes are intentional' : 'problems'}>
           <XCircle size={11} className={errors ? 'text-rust' : ''} />
           <span>{errors}</span>
           <AlertTriangle size={11} className="text-ember" />
@@ -87,7 +88,7 @@ export function StatusBar() {
           onClick={() => s().toast(`kushal-ls: indexed ${SYMBOLS.length} symbols across the workspace — all green`, 'ok')}
           className={`hidden ${item} md:flex`}
           title="kushal language server"
-          aria-label="kushal language server"
+          aria-label="kushal-ls — language server"
         >
           <Braces size={10} className="text-tide" /> kushal-ls
           <Check size={11} className="text-sage" />
@@ -112,7 +113,7 @@ export function StatusBar() {
           onClick={() => s().ensureView('achievements')}
           className={`hidden ${item} md:flex`}
           title="achievements — the trophy room"
-          aria-label={`achievements — ${Object.keys(unlocked).length} of ${ACHIEVEMENTS.length} unlocked`}
+          aria-label={`achievements: ${Object.keys(unlocked).length}/${ACHIEVEMENTS.length} unlocked`}
         >
           <Trophy size={11} className="text-ember" />
           <span>
@@ -129,14 +130,14 @@ export function StatusBar() {
         </button>
         <button
           onClick={() => s().buildForProduction()}
-          title={isTourist ? 'the one-button version: readable page for recruiters (F5)' : 'compile this workspace into a readable page (F5)'}
-          aria-label={isTourist ? 'readable page for recruiters' : 'build for production'}
+          title={isTourist ? 'the one-button version: Deploy Site (F5)' : 'compile this workspace into a readable page (F5)'}
+          aria-label={isTourist ? 'readable page for recruiters' : 'Deploy Site'}
           style={{ viewTransitionName: 'deploy-chip' }}
           className="animate-view-source mx-1 my-1 flex items-center gap-1.5 rounded-[3px] bg-ember px-2.5 font-black text-abyss shadow-md transition-all hover:bg-ember/90 hover:scale-105 active:scale-95"
         >
           <Rocket size={11} />
-          <span className="hidden sm:inline">{isTourist ? 'readable page' : 'build for production'}</span>
-          <span className="sm:hidden">build</span>
+          <span className="hidden sm:inline">Deploy Site</span>
+          <span className="sm:hidden">Deploy</span>
         </button>
         <span className="hidden h-full items-center px-2 sm:flex">
           {activeTab ? `Ln ${cursor.ln}, Col ${cursor.col}` : 'Ln –, Col –'}

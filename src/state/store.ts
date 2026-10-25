@@ -386,7 +386,7 @@ function validPanes(p: unknown): p is Pane[] {
 const okPanes: Pane[] = validPanes(r.panes) && r.panes.some((p) => p.tabs.length > 0) ? r.panes : [{ id: 'p1', tabs: ['README.md'], active: 'README.md' }]
 
 export const useIDE = create<Store>()((set, get) => ({
-  booted: true,
+  booted: false,
   mobile: false,
   restoredSession: restored.existed,
   recruiterMode: true,

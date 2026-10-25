@@ -6,6 +6,7 @@ import { SYMBOLS } from '../lsp/symbols'
 import { gotoDefinition } from '../lsp/card'
 import { fuzzy, fuzzyIdx } from './fuzzy'
 import { FileIcon } from '../editor/FileIcon'
+import { copyToClipboard } from '../lib/clipboard'
 import { exec, runPortfolioBuild } from '../terminal/commands'
 import { startTour } from '../tour/runner'
 
@@ -42,7 +43,7 @@ const COMMANDS: Item[] = [
   { id: '>guide', label: 'Guided Route', hint: 'click-through walk — no IDE knowledge needed', icon: <Compass size={13} className="text-tide" />, action: () => { const s = store.getState(); s.applySettings({ 'kushal.jargon': 'tourist' }); s.startGuide() } },
   { id: '>tourist', label: 'Toggle Tourist Mode', hint: 'plain-English labels everywhere', icon: <Languages size={13} className="text-sage" />, action: () => { const s = store.getState(); const next = s.settings['kushal.jargon'] === 'tourist' ? 'dev' : 'tourist'; s.applySettings({ 'kushal.jargon': next }); s.toast(`labels → ${next === 'tourist' ? 'plain english' : 'dev jargon'}`, 'ok') } },
   { id: '>map', label: 'What Am I Looking At?', hint: 'a labeled map of this page · F1', icon: <Map size={13} className="text-violet" />, action: () => store.getState().setModal({ kind: 'map' }) },
-  { id: '>build', label: 'Build for Production', hint: 'compile to readable page', icon: <Rocket size={13} className="text-ember" />, action: () => store.getState().buildForProduction() },
+  { id: '>build', label: 'Deploy Site', hint: 'compile to readable page', icon: <Rocket size={13} className="text-ember" />, action: () => store.getState().buildForProduction() },
   { id: '>slides', label: 'Present as Slides', hint: 'the portfolio as a deck — from live content', icon: <Presentation size={13} className="text-ember" />, action: () => store.getState().openPseudo('ui:slides') },
   { id: '>hire', label: 'Hire Kushal', hint: 'the whole point', icon: <Bell size={13} className="text-ember" />, action: () => { store.getState().setPanelTab('terminal'); exec('kushal --hire') } },
   { id: '>term', label: 'Toggle Terminal', hint: 'Ctrl+`', icon: <Terminal size={13} className="text-tide" />, action: () => store.getState().setPanelTab('terminal') },
@@ -62,7 +63,7 @@ const COMMANDS: Item[] = [
   { id: '>revert', label: 'Revert All Files', hint: 'undo your edits', icon: <RotateCcw size={13} className="text-inkdim" />, action: () => store.getState().revertAll() },
   { id: '>about', label: 'About This IDE', icon: <Info size={13} className="text-inkdim" />, action: () => store.getState().setModal({ kind: 'about' }) },
   { id: '>revertfile', label: 'Revert Current File', hint: 'undo edits to the active tab', icon: <RotateCcw size={13} className="text-inkdim" />, action: () => { const s = store.getState(); const t = getActiveTab(s); if (t && !t.startsWith('ui:')) { s.revertFile(t); s.toast(`reverted ${t}`, 'ok') } else s.toast('nothing to revert in this tab', 'info') } },
-  { id: '>copylink', label: 'Copy Link to Current File', hint: 'shareable #/file/… url', icon: <Hash size={13} className="text-tide" />, action: () => { const s = store.getState(); const t = getActiveTab(s); if (t && !t.startsWith('ui:') && !t.startsWith('commit:')) { void navigator.clipboard?.writeText(`${location.origin}${location.pathname}#/file/${encodeURIComponent(t)}`); s.toast('deep link copied — it opens straight to this file', 'ok') } else s.toast('pseudo-tabs have no link — open a real file', 'info') } },
+  { id: '>copylink', label: 'Copy Link to Current File', hint: 'shareable #/file/… url', icon: <Hash size={13} className="text-tide" />, action: () => { const s = store.getState(); const t = getActiveTab(s); if (t && !t.startsWith('ui:') && !t.startsWith('commit:')) { void copyToClipboard(`${location.origin}${location.pathname}#/file/${encodeURIComponent(t)}`).then((ok) => { if (ok) s.toast('deep link copied — it opens straight to this file', 'ok'); else s.toast('clipboard refused', 'warn') }) } else s.toast('pseudo-tabs have no link — open a real file', 'info') } },
   { id: '>shortcuts', label: 'Keyboard Shortcuts', hint: 'the full map', icon: <Command2 size={13} className="text-inkdim" />, action: () => store.getState().setModal({ kind: 'shortcuts' }) },
   { id: '>reset', label: 'Factory Reset', hint: 'wipe everything — settings, edits, achievements', icon: <AlertTriangle size={13} className="text-rust" />, action: () => store.getState().setModal({ kind: 'factory-reset' }) },
   { id: '>reload', label: 'Reload Window', hint: 'the classic fix', icon: <RefreshCw size={13} className="text-inkdim" />, action: () => window.location.reload() },
@@ -303,7 +304,7 @@ export function CommandPalette() {
             aria-activedescendant={items.length ? `po-${items[selI].id}` : undefined}
             aria-label="command palette"
             placeholder="file name — or > commands · : line · @ symbols"
-            className="w-full bg-transparent font-mono text-[13px] text-ink outline-none placeholder:text-inkfaint"
+            className="w-full bg-transparent font-mono text-[16px] sm:text-[13px] text-ink outline-none placeholder:text-inkfaint"
             autoCapitalize="off"
             spellCheck={false}
           />

@@ -1,3 +1,8 @@
+# Force HTTPS and apex domain redirects
+http://kushalgangarapu.com/*     https://kushalgangarapu.com/:splat     301!
+http://www.kushalgangarapu.com/* https://kushalgangarapu.com/:splat     301!
+https://www.kushalgangarapu.com/* https://kushalgangarapu.com/:splat    301!
+
 # Netlify-style _redirects — intentionally NO catch-all.
 # Every in-app route is hash-based (#/file/…, #/recruiter), so there are no
 # client-side paths to rewrite. A `/* /index.html 200` fallback would answer

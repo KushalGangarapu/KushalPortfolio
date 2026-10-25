@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { ChevronRight, ChevronDown, FolderClosed, FolderOpen, Heading1, Heading2, Heading3 } from 'lucide-react'
 import { useIDE, store, isDirty, isDirtyPath, getActiveTab, tabTitle } from '../state/store'
+import { copyToClipboard } from '../lib/clipboard'
 import { getDir, getFile } from '../vfs/fs'
 import { SECRET_FILES } from '../vfs/secrets'
 import type { VNode } from '../vfs/types'
@@ -35,7 +36,7 @@ function TreeNode({ node, depth }: { node: VNode; depth: number }) {
         { label: 'Open', action: () => s.openFile(path) },
         { label: 'Open to the Side', shortcut: 'Ctrl+\\', action: () => s.splitRight(path), disabled: s.panes.length >= 2 },
         { sep: true, label: '', action: () => {} },
-        { label: 'Copy Path', action: () => { void navigator.clipboard?.writeText(path).then(() => s.toast(`copied: ${path}`, 'ok')).catch(() => s.toast('copy failed — clipboard refused', 'warn')) } },
+        { label: 'Copy Path', action: () => { void copyToClipboard(path).then((ok) => { if (ok) s.toast(`copied: ${path}`, 'ok'); else s.toast('copy failed — clipboard refused', 'warn') }) } },
         { label: 'Open Diff (your edits)', action: () => s.openFile(`diff:${path}`), disabled: !isDirtyPath(s, path) },
         { sep: true, label: '', action: () => {} },
         { label: 'Delete', action: () => s.toast('delete is disabled. the files have tenure.', 'warn') },

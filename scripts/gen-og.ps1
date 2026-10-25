@@ -83,7 +83,7 @@ $g.DrawString("~ `$ $blk", $fTerm, $brushEmber, 80, 500)
 $g.FillRectangle((New-Object System.Drawing.SolidBrush $chrome), 0, $H - 34, $W, 34)
 $up = [char]0x2191; $dn = [char]0x2193
 $g.DrawString("main*   $up`17 ${dn}0", $fSm, $brushDim, 26, $H - 27)
-$g.DrawString('F5: build for production', $fSmB, $brushEmber, (New-Object 'System.Drawing.RectangleF' -ArgumentList 0, ($H - 27), ($W - 26), 30), $fmtR)
+$g.DrawString('F5: Deploy Site', $fSmB, $brushEmber, (New-Object 'System.Drawing.RectangleF' -ArgumentList 0, ($H - 27), ($W - 26), 30), $fmtR)
 
 $bmp.Save("$PSScriptRoot\..\public\og.png", [System.Drawing.Imaging.ImageFormat]::Png)
 $g.Dispose(); $bmp.Dispose()
