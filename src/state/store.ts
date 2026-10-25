@@ -465,8 +465,8 @@ export const useIDE = create<Store>()((set, get) => ({
     set({ booted: true })
     const s = get()
     const hash = window.location.hash
-    // ensure main site page is default while loading; clear any stale recruiter hash
-    if (hash === '#/recruiter') {
+    // clear stale recruiter hash only if not in recruiter mode
+    if (hash === '#/recruiter' && !s.recruiterMode) {
       window.history.replaceState(null, '', window.location.pathname + window.location.search)
     }
     const m = /^#\/file\/([^:]+)(?::(\d+))?(?::(\d+))?$/.exec(hash)

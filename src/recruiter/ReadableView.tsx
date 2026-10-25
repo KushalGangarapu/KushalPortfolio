@@ -966,7 +966,9 @@ export function ReadableView() {
   // session; F5-ing back and forth shouldn't spam the bell
   useEffect(() => {
     const prev = window.location.hash
-    window.history.replaceState(null, '', '#/recruiter')
+    if (store.getState().booted || prev === '#/recruiter') {
+      window.history.replaceState(null, '', '#/recruiter')
+    }
     document.title = 'Kushal Gangarapu'
     const s = store.getState()
     if (s.maybeHint('deployed-notif')) {
@@ -1114,16 +1116,14 @@ export function ReadableView() {
           <div className="ml-auto flex items-center gap-0.5 md:ml-0">
             <button
               onClick={() => {
-                // /hire/ is the static build of this page — it lands for a
-                // recruiter even with JS off, where #/recruiter can't
-                const url = `${location.origin}/hire/`
+                const url = `${location.origin}/`
                 void copyToClipboard(url).then((ok) => {
-                  if (ok) store.getState().toast('shareable link copied — works even with JS off', 'ok')
+                  if (ok) store.getState().toast('portfolio link copied', 'ok')
                   else store.getState().toast(`clipboard refused — the link is ${url}`, 'warn')
                 })
               }}
               className="flex items-center gap-1.5 rounded-sm px-2 py-1 font-mono text-[10.5px] text-inkdim transition-colors hover:bg-raised hover:text-ink"
-              title="copy the /hire/ link — works even with JS off"
+              title="copy link"
             >
               <Share2 size={12} /> <span className="hidden sm:inline">share</span>
             </button>

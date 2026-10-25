@@ -260,18 +260,20 @@ writeFileSync(
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>${esc(personName)} — résumé &amp; contact</title>
-  <meta name="description" content="${esc(personName)} — grade-12 developer &amp; student leader. Résumé, experience, and contact. Open to ${esc(leadWant)}." />
+  <title>${esc(personName)} — resume &amp; contact</title>
+  <meta name="description" content="${esc(personName)} — grade-12 developer &amp; student leader. Resume, experience, and contact. Open to ${esc(leadWant)}." />
   <meta name="keywords" content="Kushal Gangarapu, Kushal, Gangarapu, software engineer, full stack developer, web developer Vancouver, software engineer portfolio, student developer, Burnaby Central Secondary School, Burnaby Central, student leader, Co-Prime Minister, wildcat-calendar, BCSS calendar, BC Youth Developer Collective, BCYDC, Daydream Vancouver, React 19, TypeScript, JavaScript, PostgreSQL, Prisma, Python, Next.js, Tailwind CSS, CS50AI, Full Stack Open, Waterloo Math Contests, Gauss, Hypatia, Galois, Canadian Open Mathematics Challenge, youth hackathon organizer, summer 2027 internship" />
   <meta name="author" content="${esc(personName)}" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <link rel="canonical" href="${origin}/hire/" />
   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
-  <link rel="icon" href="/favicon.ico" sizes="48x48" />
-  <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
   <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
 
@@ -279,7 +281,7 @@ writeFileSync(
   <meta property="og:site_name" content="kushal" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:url" content="${origin}/hire/" />
-  <meta property="og:title" content="${esc(personName)} — résumé &amp; contact" />
+  <meta property="og:title" content="${esc(personName)} — resume &amp; contact" />
   <meta property="og:description" content="The readable build: experience, projects, and contact — no IDE required. Open to ${esc(leadWant)}." />
   <meta property="og:image" content="${origin}/og.png" />
   <meta property="og:image:width" content="1200" />
@@ -287,7 +289,7 @@ writeFileSync(
   <meta property="og:image:type" content="image/png" />
   <meta property="og:image:alt" content="A code-editor styled card: '${esc(personName)} — a portfolio that is a code editor' over a terminal prompt reading '~ $ kushal --hire'." />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="${esc(personName)} — résumé &amp; contact" />
+  <meta name="twitter:title" content="${esc(personName)} — resume &amp; contact" />
   <meta name="twitter:description" content="Experience, projects, contact — the readable build. Open to ${esc(leadWant)}." />
   <meta name="twitter:image" content="${origin}/og.png" />
 
