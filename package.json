@@ -2,7 +2,7 @@
   "name": "kushal",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://kushalgangarapu.com",
+  "homepage": "https://www.kushalgangarapu.com",
   "type": "module",
   "scripts": {
     "dev": "vite",

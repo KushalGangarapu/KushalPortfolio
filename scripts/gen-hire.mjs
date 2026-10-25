@@ -89,7 +89,7 @@ const exp = JSON.parse(content('experience.json'))
 // title/h1/ld without a script edit
 const personName = exp.person?.name ?? 'Kushal Gangarapu'
 // canonical domain — same package.json.homepage index.html + the sitemap read
-const origin = (JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')).homepage ?? 'https://kushalgangarapu.com').replace(/\/+$/, '')
+const origin = (JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')).homepage ?? 'https://www.kushalgangarapu.com').replace(/\/+$/, '')
 // local date — toISOString() is UTC and stamps tomorrow on late-evening builds
 const today = new Date().toLocaleDateString('en-CA')
 

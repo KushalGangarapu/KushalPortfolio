@@ -103,7 +103,7 @@ function ShareCard({ got, total }: { got: number; total: number }) {
     <button
       onClick={() => {
         void copyToClipboard(
-          `i unlocked ${got}/${total} achievements in a portfolio that is a code editor — https://kushalgangarapu.com`,
+          `i unlocked ${got}/${total} achievements in a portfolio that is a code editor — https://www.kushalgangarapu.com`,
         ).then((ok) => {
           if (ok) {
             setCopied(true)
