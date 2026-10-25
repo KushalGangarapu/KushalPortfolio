@@ -1,9 +1,4 @@
-# Force HTTPS and apex domain redirects
-http://kushalgangarapu.com/*     https://kushalgangarapu.com/:splat     301!
-http://www.kushalgangarapu.com/* https://kushalgangarapu.com/:splat     301!
-https://www.kushalgangarapu.com/* https://kushalgangarapu.com/:splat    301!
-
-# Netlify-style _redirects — intentionally NO catch-all.
+# Netlify / Cloudflare Pages _redirects — intentionally NO catch-all.
 # Every in-app route is hash-based (#/file/…, #/recruiter), so there are no
 # client-side paths to rewrite. A `/* /index.html 200` fallback would answer
 # 200 for every typo'd URL — soft-404s that poison crawling. Real files and
